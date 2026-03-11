@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<style>
+    .topbar {
+        background-color: #222;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .menu a {
+        color: white;
+        margin-right: 15px;
+        text-decoration: none;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin: 10px;
+        width: 200px;
+        display: inline-block;
+        text-align: center;
+    }
+</style>
+
+<div class="topbar">
+
+    <div>
+        <b>Sistema Atletismo</b>
+    </div>
+
+    <div class="menu">
+        <a href="#">Usuarios</a>
+        <a href="#">Atletas</a>
+        <a href="#">Equipos</a>
+        <a href="#">Torneos</a>
+        <a href="#">Resultados</a>
+        <a href="/Auth/Login">Cerrar sesión</a>
+    </div>
+
+</div>
+
+<h2>Panel de Administración</h2>
+
+<div>
+
+    <div class="card">
+        <h3>Usuarios</h3>
+        <p>Gestionar usuarios</p>
+    </div>
+
+    <div class="card">
+        <h3>Atletas</h3>
+        <p>Gestionar atletas</p>
+    </div>
+
+    <div class="card">
+        <h3>Torneos</h3>
+        <p>Crear torneos</p>
+    </div>
+
+    <div class="card">
+        <h3>Resultados</h3>
+        <p>Registrar resultados</p>
+    </div>
+
+</div>

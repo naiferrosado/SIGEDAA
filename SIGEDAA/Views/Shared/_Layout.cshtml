@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SIGEDAA.styles.css" asp-append-version="true" />
+  
 </head>
 <body>
     <header>
@@ -19,11 +20,34 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                            <ul class="navbar-nav flex-grow-1"></ul>
+
+                            <div style="color:black; font-weight:bold;">
+
+                                @{
+                                    var usuario = Context.Session.GetString("usuario");
+                                    var rol = Context.Session.GetString("rol");
+                                }
+
+                                @if (usuario != null)
+                                {
+                                    <span>
+                                        Usuario: <b>@usuario</b> | Rol: <b>@rol</b>
+                                    </span>
+
+                                    <a href="/Auth/Logout" style="margin-left:15px;">Cerrar sesión</a>
+                                }
+
+                            </div>
+
+                        </div>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                     
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                           
                         </li>
                     </ul>
                 </div>
