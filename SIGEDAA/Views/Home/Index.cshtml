@@ -1,8 +1,314 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "SIGEDAA - Sistema de Gestión del Atletismo";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<style>
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI',sans-serif;
+        background: #0b1b2b;
+        color: #ffffff;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+        padding: 20px 80px;
+        background: #0b1b2b;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .logo {
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+    }
+
+    /* HERO */
+
+    .hero {
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+        padding: 90px;
+        background: linear-gradient(rgba(5,15,25,0.85),rgba(5,15,25,0.9)), url("https://images.unsplash.com/photo-1547347298-4074fc3086f0");
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* TITULOS */
+
+    .hero-title {
+        font-size: 58px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: white;
+    }
+
+    .hero-text {
+        font-size: 19px;
+        color: #cbd5e1;
+        margin-top: 20px;
+        max-width: 600px;
+    }
+
+    /* BOTONES */
+
+    .btn-main {
+        background: #ff6b00;
+        color: white;
+        padding: 15px 36px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: .25s;
+    }
+
+        .btn-main:hover {
+            background: #e65f00;
+            transform: translateY(-2px);
+        }
+
+    .btn-outline {
+        border: 2px solid #ff6b00;
+        color: #ff6b00;
+        padding: 14px 32px;
+        border-radius: 10px;
+        margin-left: 12px;
+        text-decoration: none;
+    }
+
+        .btn-outline:hover {
+            background: #ff6b00;
+            color: white;
+        }
+
+    /* FEATURES */
+
+    .features {
+        background: #14263c;
+        padding: 90px 80px;
+    }
+
+    .feature-card {
+        background: #1d3557;
+        border-radius: 14px;
+        padding: 40px;
+        height: 100%;
+        transition: .3s;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+
+    .feature-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        color: #ff6b00;
+    }
+
+    /* STATS */
+
+    .stats {
+        padding: 90px;
+        background: #0b1b2b;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 42px;
+        font-weight: 700;
+        color: #ff6b00;
+    }
+
+    /* FOOTER */
+
+    .footer {
+        background: #081220;
+        text-align: center;
+        padding: 35px;
+        color: #cbd5e1;
+    }
+
+</style>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar d-flex justify-content-between">
+
+    <div class="logo">
+        SIGEDAA
+    </div>
+
+    <div>
+        <a href="/Auth/Login" class="btn-main">
+            Iniciar sesión
+        </a>
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-7">
+
+                <h1 class="hero-title">
+                    Sistema de Gestión
+                    del Atletismo Dominicano
+                </h1>
+
+                <p class="hero-text">
+
+                    SIGEDAA es la plataforma digital para la administración
+                    de atletas, competencias y resultados del atletismo en
+                    la República Dominicana.
+
+                </p>
+
+                <div class="mt-4">
+
+                    <a href="/Auth/Login" class="btn-main">
+                        Entrar al sistema
+                    </a>
+
+                    <a href="#features" class="btn-outline">
+                        Ver funcionalidades
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features" id="features">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 style="font-size:38px;font-weight:700;color:white;">
+                Herramientas del Sistema
+            </h2>
+
+            <p style="color:#cbd5e1">
+                Tecnología moderna para la gestión del atletismo
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-lg-4">
+
+                <div class="feature-card">
+
+                    <h5>Gestión de Atletas</h5>
+
+                    <p style="color:#cbd5e1">
+                        Registro completo de atletas, historial y control de rendimiento.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="feature-card">
+
+                    <h5>Eventos Deportivos</h5>
+
+                    <p style="color:#cbd5e1">
+                        Administración de torneos, calendarios y categorías.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="feature-card">
+
+                    <h5>Resultados y Estadísticas</h5>
+
+                    <p style="color:#cbd5e1">
+                        Seguimiento del desempeño y resultados oficiales.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats">
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-4">
+
+                <div class="stat-number">500+</div>
+                <p>Atletas registrados</p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="stat-number">30+</div>
+                <p>Eventos deportivos</p>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="stat-number">1200+</div>
+                <p>Resultados registrados</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    © @(DateTime.Now.Year) SIGEDAA · Sistema de Gestión del Atletismo · República Dominicana
+
+</footer>
