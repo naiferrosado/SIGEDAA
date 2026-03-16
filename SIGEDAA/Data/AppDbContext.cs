@@ -9,7 +9,7 @@ namespace SIGEDAA.Data
         {
         }
 
-        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Usuarios> Usuarios { get; set; }
 
         public DbSet<Equipo> Equipos { get; set; }
 

@@ -1,17 +1,28 @@
-﻿namespace SIGEDAA.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SIGEDAA.Models
 {
     public class Atleta
     {
-        public int Id { get; set; }
+        [Key]
+        public int IdAtleta { get; set; }
 
-        public string Nombre { get; set; }
+        public int IdClub { get; set; } // Relación con su club
 
-        public string Apellido { get; set; }
+        [Required]
+        public string Nombres { get; set; }
+
+        [Required]
+        public string Apellidos { get; set; }
 
         public DateTime FechaNacimiento { get; set; }
 
-        public int EquipoId { get; set; }
+        public string Genero { get; set; }
 
-        public Equipo Equipo { get; set; }
+        public decimal EstaturaCm { get; set; }
+
+        public decimal PesoKg { get; set; }
+
+        public string TipoSangre { get; set; }
     }
 }
