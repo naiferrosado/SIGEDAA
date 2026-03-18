@@ -18,7 +18,7 @@ namespace SIGEDAA.Controllers
         // MOSTRAR FORMULARIO LOGIN
         public IActionResult Login()
         {
-            return RedirectToAction("Index", "Home");
+            return View();
         }
 
         // PROCESAR LOGIN
