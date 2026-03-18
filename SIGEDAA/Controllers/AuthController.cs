@@ -19,13 +19,13 @@ namespace SIGEDAA.Controllers
             _context = context;
         }
 
-        // MOSTRAR FORMULARIO LOGIN
+        // MOSTRAR
         public IActionResult Login()
         {
             return View();
         }
 
-        // PROCESAR LOGIN (Ahora es async Task)
+        
         [HttpPost]
         public async Task<IActionResult> Login(string Email, string password)
         {

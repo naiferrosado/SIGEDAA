@@ -1,0 +1,33 @@
+﻿@model SIGEDAA.Models.Atleta
+
+@{
+    ViewData["Title"] = "Detalle Atleta";
+}
+
+<h2>Detalle Atleta</h2>
+
+<div class="card p-3">
+    <dl class="row">
+        <dt class="col-sm-3">Id</dt>
+        <dd class="col-sm-9">@Model.IdAtleta</dd>
+        <dt class="col-sm-3">Nombres</dt>
+        <dd class="col-sm-9">@Model.Nombres</dd>
+        <dt class="col-sm-3">Apellidos</dt>
+        <dd class="col-sm-9">@Model.Apellidos</dd>
+        <dt class="col-sm-3">Fecha Nacimiento</dt>
+        <dd class="col-sm-9">@Model.FechaNacimiento.ToString("yyyy-MM-dd")</dd>
+        <dt class="col-sm-3">Género</dt>
+        <dd class="col-sm-9">@Model.Genero</dd>
+        <dt class="col-sm-3">Estatura (cm)</dt>
+        <dd class="col-sm-9">@Model.EstaturaCm</dd>
+        <dt class="col-sm-3">Peso (kg)</dt>
+        <dd class="col-sm-9">@Model.PesoKg</dd>
+        <dt class="col-sm-3">Tipo Sangre</dt>
+        <dd class="col-sm-9">@Model.TipoSangre</dd>
+        <dt class="col-sm-3">Id Club</dt>
+        <dd class="col-sm-9">@Model.IdClub</dd>
+    </dl>
+
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    <a asp-action="Edit" asp-route-id="@Model.IdAtleta" class="btn btn-warning">Editar</a>
+</div>

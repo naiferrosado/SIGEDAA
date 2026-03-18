@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIGEDAA.Models;
+using System;
 
 namespace SIGEDAA.Data
 {
@@ -74,6 +75,19 @@ namespace SIGEDAA.Data
                 b.ToTable("AsociacionesProvinciales");
                 b.Property(x => x.NombreAsociacion).IsRequired();
                 b.Property(x => x.Provincia).IsRequired();
+
+                // Seed: asociación de prueba
+                b.HasData(new AsociacionProvincial
+                {
+                    IdAsociacion = 1,
+                    NombreAsociacion = "Asociación Provincial de Prueba",
+                    Provincia = "Santo Domingo",
+                    NombrePresidente = "Presidente Prueba",
+                    TelefonoContacto = "8090000000",
+                    CorreoContacto = "asociacion@prueba.com",
+                    FechaFundacion = new DateTime(2020, 1, 1),
+                    CertificacionAlDia = true
+                });
             });
 
             // Club
@@ -83,6 +97,19 @@ namespace SIGEDAA.Data
                 b.ToTable("Clubes");
                 b.Property(c => c.NombreClub).IsRequired();
                 b.HasOne<AsociacionProvincial>().WithMany().HasForeignKey(c => c.IdAsociacion).OnDelete(DeleteBehavior.Restrict);
+
+                // Seed: club de prueba (usa IdAsociacion = 1)
+                b.HasData(new Club
+                {
+                    IdClub = 1,
+                    IdAsociacion = 1,
+                    NombreClub = "Club Prueba",
+                    DireccionSede = "Calle Prueba 123",
+                    NombreDirector = "Director Prueba",
+                    Telefono = "8091111111",
+                    FechaInscripcion = new DateTime(2024, 1, 1),
+                    EstadoActivo = true
+                });
             });
 
             // Competencia

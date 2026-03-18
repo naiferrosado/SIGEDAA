@@ -1,0 +1,27 @@
+﻿@model SIGEDAA.Models.Atleta
+
+@{
+    ViewData["Title"] = "Eliminar Atleta";
+}
+
+<h2>Eliminar Atleta</h2>
+
+<div class="card p-3">
+    <p class="text-danger">¿Seguro que desea eliminar el atleta <strong>@Model.Nombres @Model.Apellidos</strong>?</p>
+
+    <dl class="row">
+        <dt class="col-sm-3">Id</dt>
+        <dd class="col-sm-9">@Model.IdAtleta</dd>
+        <dt class="col-sm-3">Fecha Nacimiento</dt>
+        <dd class="col-sm-9">@Model.FechaNacimiento.ToString("yyyy-MM-dd")</dd>
+        <dt class="col-sm-3">Género</dt>
+        <dd class="col-sm-9">@Model.Genero</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="id" value="@Model.IdAtleta" />
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

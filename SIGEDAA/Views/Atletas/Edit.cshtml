@@ -1,0 +1,54 @@
+﻿@model SIGEDAA.Models.Atleta
+
+@{
+    ViewData["Title"] = "Editar Atleta";
+}
+
+<h2>Editar Atleta</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="IdAtleta" />
+    <div class="mb-3">
+        <label asp-for="Nombres" class="form-label"></label>
+        <input asp-for="Nombres" class="form-control" />
+        <span asp-validation-for="Nombres" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Apellidos" class="form-label"></label>
+        <input asp-for="Apellidos" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="FechaNacimiento" class="form-label"></label>
+        <input asp-for="FechaNacimiento" class="form-control" type="date" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Genero" class="form-label"></label>
+        <input asp-for="Genero" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="EstaturaCm" class="form-label"></label>
+        <input asp-for="EstaturaCm" class="form-control" step="0.01" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="PesoKg" class="form-label"></label>
+        <input asp-for="PesoKg" class="form-control" step="0.01" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="TipoSangre" class="form-label"></label>
+        <input asp-for="TipoSangre" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Club</label>
+        <select asp-for="IdClub" class="form-select" asp-items="ViewBag.Clubes">
+            <option value="">-- Ninguno --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

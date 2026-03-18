@@ -91,7 +91,6 @@
         font-size: 30px;
         opacity: 0.8;
     }
-
 </style>
 
 
@@ -103,7 +102,7 @@
 
     <a href="#"><i class="fa fa-chart-line"></i> Dashboard</a>
     <a href="#"><i class="fa fa-users"></i> Usuarios</a>
-    <a href="#"><i class="fa fa-running"></i> Atletas</a>
+    <a href="/Atletas"><i class="fa fa-running"></i> Atletas</a>
     <a href="#"><i class="fa fa-people-group"></i> Equipos</a>
     <a href="#"><i class="fa fa-trophy"></i> Torneos</a>
     <a href="#"><i class="fa fa-medal"></i> Resultados</a>
@@ -139,7 +138,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div>
-                        <h3>120</h3>
+                        <h3>@(ViewBag.AtletasCount ?? 0)</h3>
                         <p>Atletas</p>
                     </div>
 
@@ -159,7 +158,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div>
-                        <h3>15</h3>
+                        <h3>@(ViewBag.EquiposCount ?? 0)</h3>
                         <p>Equipos</p>
                     </div>
 
@@ -179,7 +178,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div>
-                        <h3>8</h3>
+                        <h3>@(ViewBag.TorneosCount ?? 0)</h3>
                         <p>Torneos</p>
                     </div>
 
@@ -199,7 +198,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div>
-                        <h3>52</h3>
+                        <h3>@(ViewBag.ResultadosCount ?? 0)</h3>
                         <p>Resultados</p>
                     </div>
 
