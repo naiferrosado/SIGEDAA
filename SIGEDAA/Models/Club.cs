@@ -23,5 +23,8 @@ namespace SIGEDAA.Models
         public DateTime FechaInscripcion { get; set; }
 
         public bool EstadoActivo { get; set; }
+
+        
+
     }
 }
