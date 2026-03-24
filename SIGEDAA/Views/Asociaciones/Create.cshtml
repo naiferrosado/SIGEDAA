@@ -1,0 +1,54 @@
+﻿@model SIGEDAA.Models.AsociacionProvincial
+
+@{
+    ViewData["Title"] = "Registrar Asociación";
+}
+
+<div class="card shadow-sm mx-auto" style="max-width: 800px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Registrar Nueva Asociación</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="NombreAsociacion" class="form-label">Nombre de la Asociación</label>
+                    <input asp-for="NombreAsociacion" class="form-control" placeholder="Ej. Asoc. de Atletismo de Bahoruco" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Provincia" class="form-label">Provincia</label>
+                    <input asp-for="Provincia" class="form-control" placeholder="Ej. Bahoruco" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="NombrePresidente" class="form-label">Presidente</label>
+                    <input asp-for="NombrePresidente" class="form-control" placeholder="Nombre completo" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TelefonoContacto" class="form-label">Teléfono</label>
+                    <input asp-for="TelefonoContacto" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CorreoContacto" class="form-label">Correo Electrónico</label>
+                    <input asp-for="CorreoContacto" class="form-control" type="email" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaFundacion" class="form-label">Fecha de Fundación</label>
+                    <input asp-for="FechaFundacion" class="form-control" type="date" />
+                </div>
+                <div class="col-md-12 mb-3 form-check ms-2 mt-2">
+                    <input asp-for="CertificacionAlDia" class="form-check-input" type="checkbox" />
+                    <label asp-for="CertificacionAlDia" class="form-check-label">¿Certificación de la FDAA al día?</label>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

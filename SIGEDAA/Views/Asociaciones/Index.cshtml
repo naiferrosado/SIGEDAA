@@ -1,0 +1,79 @@
+﻿@model IEnumerable<SIGEDAA.Models.AsociacionProvincial>
+
+@{
+    ViewData["Title"] = "Asociaciones Provinciales";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>Asociaciones Provinciales</h2>
+    <div>
+        <a class="btn btn-primary" asp-action="Create">Nueva Asociación</a>
+        <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Volver al Dashboard</a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card p-3 shadow-sm">
+    <table id="tablaAsociaciones" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Asociación</th>
+                <th>Provincia</th>
+                <th>Presidente</th>
+                <th>Contacto</th>
+                <th>Certificada</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NombreAsociacion</td>
+                    <td>@item.Provincia</td>
+                    <td>@item.NombrePresidente</td>
+                    <td>@item.TelefonoContacto</td>
+                    <td>
+                        @if (item.CertificacionAlDia)
+                        {
+                            <span class="badge bg-success">Al Día</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Vencida</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdAsociacion">Editar</a>
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.IdAsociacion" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asociación?');">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tablaAsociaciones').DataTable({
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json" }
+            });
+        });
+    </script>
+}
