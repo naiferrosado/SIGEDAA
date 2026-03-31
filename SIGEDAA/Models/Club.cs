@@ -24,7 +24,8 @@ namespace SIGEDAA.Models
 
         public bool EstadoActivo { get; set; }
 
-        
+        // Relación: Un club puede participar en muchas competencias
+        public virtual ICollection<CompetenciaClub> CompetenciasParticipadas { get; set; }
 
     }
 }

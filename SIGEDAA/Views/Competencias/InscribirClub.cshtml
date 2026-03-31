@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Inscribir Club";
+    var competencia = ViewBag.Competencia as SIGEDAA.Models.Competencia;
+}
+
+<div class="card shadow-sm mx-auto" style="max-width: 800px;">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Inscribir Club en Torneo</h4>
+    </div>
+    <div class="card-body">
+
+        <div class="alert alert-info">
+            <h5 class="alert-heading"><i class="fas fa-trophy"></i> @competencia.NombreEvento</h5>
+            <hr>
+            <p class="mb-0">
+                <strong>Sede:</strong> @competencia.Sede |
+                <strong>Nivel:</strong> @competencia.Nivel |
+                <strong>Fecha:</strong> @competencia.FechaInicio.ToString("dd/MM/yyyy")
+            </p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <form asp-action="InscribirClub" method="post">
+            <input type="hidden" name="IdCompetencia" value="@competencia.IdCompetencia" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold">1. Selecciona la Provincia / Asociación</label>
+                    <select id="selectProvincia" class="form-select border-primary" asp-items="ViewBag.Asociaciones" required>
+                        <option value="">-- Elija una Provincia --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold">2. Selecciona el Club</label>
+                    <select id="selectClub" name="IdClub" class="form-select border-success" required disabled>
+                        <option value="">-- Primero elija una provincia --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Confirmar Inscripción</button>
+                <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Cuando cambia el Dropdown de la provincia...
+            $("#selectProvincia").change(function () {
+                var asocId = $(this).val();
+                var selectClub = $("#selectClub");
+
+                selectClub.empty();
+
+                if (asocId) {
+                    selectClub.prop("disabled", false);
+                    selectClub.append('<option value="">Buscando clubes activos...</option>');
+
+                    // Llamada AJAX al controlador
+                    $.getJSON('/Competencias/ObtenerClubesPorProvincia', { idAsociacion: asocId }, function (data) {
+                        selectClub.empty();
+
+                        if(data.length > 0){
+                            selectClub.append('<option value="">-- Seleccione un Club --</option>');
+                            $.each(data, function (index, item) {
+                                selectClub.append('<option value="' + item.valor + '">' + item.texto + '</option>');
+                            });
+                        } else {
+                            selectClub.append('<option value="">No hay clubes activos en esta provincia</option>');
+                            selectClub.prop("disabled", true);
+                        }
+                    });
+                } else {
+                    selectClub.append('<option value="">-- Primero elija una provincia --</option>');
+                    selectClub.prop("disabled", true);
+                }
+            });
+        });
+    </script>
+}

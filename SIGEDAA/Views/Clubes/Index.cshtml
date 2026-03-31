@@ -69,6 +69,8 @@
                         }
                     </td>
                     <td>
+                        <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.IdClub">Ver Detalles</a>
+
                         <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdClub">Editar</a>
                         <form asp-action="Delete" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@item.IdClub" />

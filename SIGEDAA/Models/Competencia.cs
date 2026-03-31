@@ -6,7 +6,8 @@ namespace SIGEDAA.Models
     {
         [Key]
         public int IdCompetencia { get; set; }
-
+        // Relación: Un torneo tiene muchos clubes inscritos
+        public virtual ICollection<CompetenciaClub> ClubesInscritos { get; set; }
         [Required]
         public string NombreEvento { get; set; }
 

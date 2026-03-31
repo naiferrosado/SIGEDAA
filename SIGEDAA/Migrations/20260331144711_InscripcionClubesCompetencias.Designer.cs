@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331144711_InscripcionClubesCompetencias")]
+    partial class InscripcionClubesCompetencias
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +215,7 @@ namespace SIGEDAA.Migrations
 
                     b.HasIndex("IdCompetencia");
 
-                    b.ToTable("CompetenciasClubes", (string)null);
+                    b.ToTable("CompetenciasClubes");
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Disciplina", b =>
@@ -435,13 +438,13 @@ namespace SIGEDAA.Migrations
             modelBuilder.Entity("SIGEDAA.Models.CompetenciaClub", b =>
                 {
                     b.HasOne("SIGEDAA.Models.Club", "Club")
-                        .WithMany("CompetenciasParticipadas")
+                        .WithMany()
                         .HasForeignKey("IdClub")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SIGEDAA.Models.Competencia", "Competencia")
-                        .WithMany("ClubesInscritos")
+                        .WithMany()
                         .HasForeignKey("IdCompetencia")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -479,16 +482,6 @@ namespace SIGEDAA.Migrations
                         .HasForeignKey("IdDisciplina")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SIGEDAA.Models.Club", b =>
-                {
-                    b.Navigation("CompetenciasParticipadas");
-                });
-
-            modelBuilder.Entity("SIGEDAA.Models.Competencia", b =>
-                {
-                    b.Navigation("ClubesInscritos");
                 });
 #pragma warning restore 612, 618
         }

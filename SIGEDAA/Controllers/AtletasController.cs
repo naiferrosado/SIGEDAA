@@ -40,7 +40,12 @@ namespace SIGEDAA.Controllers
         // GET: /Atletas/Create
         public IActionResult Create()
         {
-            ViewBag.Clubes = new SelectList(_context.Clubes.ToList(), "IdClub", "NombreClub");
+            // Enviamos la lista de Asociaciones para el primer filtro
+            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.ToList(), "IdAsociacion", "NombreAsociacion");
+
+            // El de clubes lo mandamos vacío al inicio
+            ViewBag.Clubes = new SelectList(new List<Club>(), "IdClub", "NombreClub");
+
             return View();
         }
 
@@ -53,13 +58,30 @@ namespace SIGEDAA.Controllers
             {
                 _context.Add(atleta);
                 await _context.SaveChangesAsync();
-
                 TempData["Success"] = "Atleta agregado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Clubes = new SelectList(_context.Clubes.ToList(), "IdClub", "NombreClub", atleta.IdClub);
+            // Si hay error en el formulario, recargamos las listas
+            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.ToList(), "IdAsociacion", "NombreAsociacion");
+            ViewBag.Clubes = new SelectList(_context.Clubes.Where(c => c.IdClub == atleta.IdClub).ToList(), "IdClub", "NombreClub", atleta.IdClub);
+
             return View(atleta);
+        }
+
+        // ESTE ES EL NUEVO MÉTODO PARA EL FILTRO (Ponlo al final del controlador, antes de la última llave)
+        [HttpGet]
+        public async Task<JsonResult> ObtenerClubesPorAsociacion(int idAsociacion)
+        {
+            var clubes = await _context.Clubes
+                .Where(c => c.IdAsociacion == idAsociacion && c.EstadoActivo == true)
+                .Select(c => new {
+                    valor = c.IdClub,
+                    texto = c.NombreClub
+                })
+                .ToListAsync();
+
+            return Json(clubes);
         }
 
         // GET: /Atletas/Edit/5

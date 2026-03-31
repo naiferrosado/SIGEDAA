@@ -49,6 +49,10 @@ namespace SIGEDAA.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Club club)
         {
+            // 1. Ignorar las propiedades de relación para que la validación pase
+            ModelState.Remove("CompetenciasParticipadas");
+            ModelState.Remove("Asociacion");
+
             if (ModelState.IsValid)
             {
                 _context.Add(club);
@@ -61,7 +65,6 @@ namespace SIGEDAA.Controllers
             ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales, "IdAsociacion", "NombreAsociacion", club.IdAsociacion);
             return View(club);
         }
-
         // GET: /Clubes/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -81,6 +84,10 @@ namespace SIGEDAA.Controllers
         public async Task<IActionResult> Edit(int id, Club club)
         {
             if (id != club.IdClub) return NotFound();
+
+            // 1. Ignorar las propiedades de relación
+            ModelState.Remove("CompetenciasParticipadas");
+            ModelState.Remove("Asociacion");
 
             if (ModelState.IsValid)
             {
@@ -102,7 +109,6 @@ namespace SIGEDAA.Controllers
             ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales, "IdAsociacion", "NombreAsociacion", club.IdAsociacion);
             return View(club);
         }
-
         // POST: /Clubes/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -124,6 +130,31 @@ namespace SIGEDAA.Controllers
                 TempData["Success"] = "Club eliminado correctamente.";
             }
             return RedirectToAction(nameof(Index));
+        }// GET: /Clubes/Details/5
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            // 1. Buscamos el club
+            var club = await _context.Clubes.FindAsync(id);
+            if (club == null) return NotFound();
+
+            // 2. Buscamos el nombre de la Asociación para mostrarlo en la vista
+            var asociacion = await _context.AsociacionesProvinciales.FindAsync(club.IdAsociacion);
+            ViewBag.NombreAsociacion = asociacion != null ? asociacion.NombreAsociacion : "Sin Asociación";
+
+            // 3. Buscamos TODOS los atletas que pertenezcan a este club específico
+            var atletasDelClub = await _context.Atletas
+                                               .Where(a => a.IdClub == id)
+                                               .OrderBy(a => a.Apellidos)
+                                               .ToListAsync();
+
+            // Pasamos la lista de atletas a la vista usando ViewBag
+            ViewBag.Atletas = atletasDelClub;
+
+            return View(club);
         }
+
     }
 }

@@ -1,0 +1,96 @@
+﻿@model SIGEDAA.Models.Club
+
+@{
+    ViewData["Title"] = "Detalles del Club";
+    // Recuperamos la lista de atletas que mandamos desde el controlador
+    var atletas = ViewBag.Atletas as List<SIGEDAA.Models.Atleta>;
+}
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>Detalles del Club: <span class="text-primary">@Model.NombreClub</span></h2>
+    <div>
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdClub">Editar Club</a>
+        <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0"><i class="fas fa-info-circle"></i> Información General</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <strong>Asociación:</strong> @ViewBag.NombreAsociacion
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Director/Entrenador:</strong> @(string.IsNullOrEmpty(Model.NombreDirector) ? "No asignado" : Model.NombreDirector)
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Teléfono:</strong> @Model.Telefono
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Sede:</strong> @Model.DireccionSede
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Fecha de Inscripción:</strong> @Model.FechaInscripcion.ToString("dd/MM/yyyy")
+            </div>
+            <div class="col-md-6 mb-2">
+                <strong>Estado:</strong>
+                @if (Model.EstadoActivo)
+                {
+                    <span class="badge bg-success">Activo</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactivo</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-running"></i> Atletas Registrados (@(atletas?.Count ?? 0))</h5>
+        <a asp-controller="Atletas" asp-action="Create" class="btn btn-sm btn-light text-primary fw-bold">Agregar Nuevo Atleta</a>
+    </div>
+    <div class="card-body">
+        @if (atletas == null || !atletas.Any())
+        {
+            <div class="alert alert-info mb-0">
+                Este club aún no tiene atletas registrados.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Género</th>
+                            <th>Nacimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var atleta in atletas)
+                        {
+                            <tr>
+                                <td>@atleta.Nombres</td>
+                                <td>@atleta.Apellidos</td>
+                                <td>@atleta.Genero</td>
+                                <td>@atleta.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a class="btn btn-sm btn-info" asp-controller="Atletas" asp-action="Details" asp-route-id="@atleta.IdAtleta">Perfil</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,74 @@
+﻿@model SIGEDAA.Models.Competencia
+
+@{
+    ViewData["Title"] = "Editar Torneo";
+}
+
+<div class="card shadow-sm mx-auto" style="max-width: 800px;">
+    <div class="card-header bg-warning text-dark">
+        <h4 class="mb-0">Editar Torneo (Competencia)</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdCompetencia" />
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label asp-for="NombreEvento" class="form-label">Nombre del Evento</label>
+                    <input asp-for="NombreEvento" class="form-control" required />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaInicio" class="form-label fw-bold">Fecha de Inicio</label>
+                    <input asp-for="FechaInicio" id="FechaInicio" class="form-control" type="date" required />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaFin" class="form-label fw-bold">Fecha de Finalización</label>
+                    <input asp-for="FechaFin" id="FechaFin" class="form-control" type="date" required />
+                    <span asp-validation-for="FechaFin" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Sede" class="form-label">Sede / Ubicación</label>
+                    <input asp-for="Sede" class="form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Nivel" class="form-label">Nivel de la Competencia</label>
+                    <select asp-for="Nivel" class="form-select">
+                        <option value="Provincial">Provincial</option>
+                        <option value="Nacional">Nacional</option>
+                        <option value="Invitacional">Invitacional</option>
+                        <option value="Internacional">Internacional</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Estado" class="form-label">Estado del Torneo</label>
+                    <select asp-for="Estado" class="form-select">
+                        <option value="Programada">Programada</option>
+                        <option value="En Curso">En Curso</option>
+                        <option value="Finalizada">Finalizada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Observaciones" class="form-label">Observaciones Adicionales</label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-warning">Actualizar Torneo</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

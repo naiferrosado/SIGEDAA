@@ -20,7 +20,7 @@ namespace SIGEDAA.Data
         public DbSet<Disciplina> Disciplinas { get; set; }
         public DbSet<ResultadoCompetencia> ResultadosCompetencia { get; set; }
         public DbSet<Entrenador> Entrenadores { get; set; }
-    
+        public DbSet<CompetenciaClub> CompetenciasClubes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,18 +76,7 @@ namespace SIGEDAA.Data
                 b.Property(x => x.NombreAsociacion).IsRequired();
                 b.Property(x => x.Provincia).IsRequired();
 
-                // Seed: asociación de prueba
-                b.HasData(new AsociacionProvincial
-                {
-                    IdAsociacion = 1,
-                    NombreAsociacion = "Asociación Provincial de Prueba",
-                    Provincia = "Santo Domingo",
-                    NombrePresidente = "Presidente Prueba",
-                    TelefonoContacto = "8090000000",
-                    CorreoContacto = "asociacion@prueba.com",
-                    FechaFundacion = new DateTime(2020, 1, 1),
-                    CertificacionAlDia = true
-                });
+              
             });
 
             // Club
@@ -98,18 +87,7 @@ namespace SIGEDAA.Data
                 b.Property(c => c.NombreClub).IsRequired();
                 b.HasOne<AsociacionProvincial>().WithMany().HasForeignKey(c => c.IdAsociacion).OnDelete(DeleteBehavior.Restrict);
 
-                // Seed: club de prueba (usa IdAsociacion = 1)
-                b.HasData(new Club
-                {
-                    IdClub = 1,
-                    IdAsociacion = 1,
-                    NombreClub = "Club Prueba",
-                    DireccionSede = "Calle Prueba 123",
-                    NombreDirector = "Director Prueba",
-                    Telefono = "8091111111",
-                    FechaInscripcion = new DateTime(2024, 1, 1),
-                    EstadoActivo = true
-                });
+                
             });
 
             // Competencia
@@ -136,8 +114,28 @@ namespace SIGEDAA.Data
                 b.HasOne<Competencia>().WithMany().HasForeignKey(r => r.IdCompetencia).OnDelete(DeleteBehavior.Restrict);
                 b.HasOne<Atleta>().WithMany().HasForeignKey(r => r.IdAtleta).OnDelete(DeleteBehavior.Restrict);
                 b.HasOne<Disciplina>().WithMany().HasForeignKey(r => r.IdDisciplina).OnDelete(DeleteBehavior.Restrict);
-            });
+                b.Property(r => r.PuntosOtorgados).HasPrecision(10, 2);
 
+                b.HasOne<Competencia>().WithMany().HasForeignKey(r => r.IdCompetencia).OnDelete(DeleteBehavior.Restrict);
+                b.HasOne<Atleta>().WithMany().HasForeignKey(r => r.IdAtleta).OnDelete(DeleteBehavior.Restrict);
+                b.HasOne<Disciplina>().WithMany().HasForeignKey(r => r.IdDisciplina).OnDelete(DeleteBehavior.Restrict);
+            });
+            // Configuración de la relación Muchos a Muchos (Torneos y Clubes)
+            modelBuilder.Entity<CompetenciaClub>(b =>
+            {
+                b.HasKey(cc => cc.IdInscripcion);
+                b.ToTable("CompetenciasClubes");
+
+                b.HasOne(cc => cc.Competencia)
+                 .WithMany(c => c.ClubesInscritos)
+                 .HasForeignKey(cc => cc.IdCompetencia)
+                 .OnDelete(DeleteBehavior.Cascade); // Si eliminas el torneo, se eliminan las inscripciones
+
+                b.HasOne(cc => cc.Club)
+                 .WithMany(c => c.CompetenciasParticipadas)
+                 .HasForeignKey(cc => cc.IdClub)
+                 .OnDelete(DeleteBehavior.Restrict); // Protege al club para que no se borre accidentalmente
+            });
             // Entrenador
             modelBuilder.Entity<Entrenador>(b =>
             {
