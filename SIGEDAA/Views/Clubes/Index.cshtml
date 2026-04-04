@@ -70,11 +70,17 @@
                     </td>
                     <td>
                         <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.IdClub">Ver Detalles</a>
-
                         <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdClub">Editar</a>
-                        <form asp-action="Delete" method="post" class="d-inline">
+                        <form asp-action="CambiarEstado" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@item.IdClub" />
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este club?');">Eliminar</button>
+                            @if (item.EstadoActivo)
+                            {
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar este club?');">Inhabilitar</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar este club?');">Habilitar</button>
+                            }
                         </form>
                     </td>
                 </tr>

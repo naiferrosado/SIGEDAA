@@ -1,0 +1,42 @@
+﻿@model SIGEDAA.Models.Disciplina
+
+@{
+    ViewData["Title"] = "Nueva Disciplina";
+}
+
+<div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-running"></i> Crear Disciplina</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="NombreDisciplina" class="form-label fw-bold">Nombre de la Disciplina</label>
+                <input asp-for="NombreDisciplina" class="form-control border-primary" placeholder="Ej. 100 Metros Planos" required />
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Tipo" class="form-label fw-bold">Tipo (Pista, Campo, etc.)</label>
+                <input asp-for="Tipo" class="form-control" placeholder="Ej. Pista" required />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TipoMedicion" class="form-label fw-bold">Tipo de Medición</label>
+                <select asp-for="TipoMedicion" class="form-select">
+                    <option value="Tiempo">Tiempo (Cronómetro)</option>
+                    <option value="Distancia">Distancia (Metros/Centímetros)</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="CategoriaRecomendada" class="form-label fw-bold">Categoría Recomendada</label>
+                <input asp-for="CategoriaRecomendada" class="form-control" placeholder="Ej. Libre, Sub-20, etc." />
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Disciplina</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

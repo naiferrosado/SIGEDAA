@@ -53,10 +53,20 @@
                         }
                     </td>
                     <td>
+                        <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.IdAsociacion">Ver Clubes</a>
+
                         <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdAsociacion">Editar</a>
-                        <form asp-action="Delete" method="post" class="d-inline">
+
+                        <form asp-action="CambiarEstado" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@item.IdAsociacion" />
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta asociación?');">Eliminar</button>
+                            @if (item.EstadoActivo)
+                            {
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar esta asociación?');">Inhabilitar</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Volver a habilitar esta asociación?');">Habilitar</button>
+                            }
                         </form>
                     </td>
                 </tr>

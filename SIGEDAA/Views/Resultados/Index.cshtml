@@ -1,0 +1,68 @@
+﻿@model IEnumerable<SIGEDAA.Models.ResultadoCompetencia>
+
+@{
+    ViewData["Title"] = "Resultados";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+
+<div class="d-flex justify-content-between mb-3">
+    <h2>Registro de Resultados</h2>
+    <div>
+        <a class="btn btn-primary" asp-action="Create">Registrar Resultado</a>
+        <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Volver al Dashboard</a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="card p-3 shadow-sm">
+    <table id="tablaResultados" class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Torneo</th>
+                <th>Disciplina</th>
+                <th>Atleta</th>
+                <th>Marca</th>
+                <th>Posición</th>
+                <th>Puntos</th>
+                <th>¿Récord?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Competencia?.NombreEvento</td>
+                    <td><span class="badge bg-info text-dark">@item.Disciplina?.NombreDisciplina</span></td>
+                    <td class="fw-bold">@item.Atleta?.Nombres @item.Atleta?.Apellidos</td>
+                    <td class="text-success fw-bold">@item.MarcaObtenida</td>
+                    <td>@(item.PosicionFinal)° Lugar</td>
+                    <td>@item.PuntosOtorgados</td>
+                    <td>
+                        @if (item.EsRecordNacional)
+                        {
+                            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Sí</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tablaResultados').DataTable({
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json" }
+            });
+        });
+    </script>
+}

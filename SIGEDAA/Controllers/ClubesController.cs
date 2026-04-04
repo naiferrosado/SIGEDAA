@@ -40,7 +40,7 @@ namespace SIGEDAA.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales, "IdAsociacion", "NombreAsociacion");
+            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.Where(a => a.EstadoActivo == true).ToList(), "IdAsociacion", "NombreAsociacion");
             return View();
         }
 
@@ -62,7 +62,7 @@ namespace SIGEDAA.Controllers
             }
 
             // Si hay error en la validación, recarga el Select
-            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales, "IdAsociacion", "NombreAsociacion", club.IdAsociacion);
+            ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.Where(a => a.EstadoActivo == true).ToList(), "IdAsociacion", "NombreAsociacion");
             return View(club);
         }
         // GET: /Clubes/Edit/5
@@ -154,6 +154,30 @@ namespace SIGEDAA.Controllers
             ViewBag.Atletas = atletasDelClub;
 
             return View(club);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarEstado(int id)
+        {
+            var club = await _context.Clubes.FindAsync(id);
+            if (club == null) return NotFound();
+
+            club.EstadoActivo = !club.EstadoActivo;
+
+            // Si el club se INACTIVA, inactivamos a sus atletas
+            if (!club.EstadoActivo)
+            {
+                var atletas = _context.Atletas.Where(a => a.IdClub == id).ToList();
+                foreach (var atleta in atletas)
+                {
+                    atleta.EstadoActivo = false;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = club.EstadoActivo ? "Club habilitado." : "Club y sus atletas inhabilitados.";
+
+            return RedirectToAction(nameof(Index));
         }
 
     }

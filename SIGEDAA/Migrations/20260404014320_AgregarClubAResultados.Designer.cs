@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404014320_AgregarClubAResultados")]
+    partial class AgregarClubAResultados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,7 +300,9 @@ namespace SIGEDAA.Migrations
 
                     b.HasKey("IdEntrenador");
 
-                    b.ToTable("Entrenadores");
+                    b.HasIndex("IdClub");
+
+                    b.ToTable("Entrenadores", (string)null);
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Equipo", b =>
@@ -333,6 +338,15 @@ namespace SIGEDAA.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdResultado"));
 
+                    b.Property<int>("AtletaIdAtleta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompetenciaIdCompetencia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DisciplinaIdDisciplina")
+                        .HasColumnType("int");
+
                     b.Property<bool>("EsRecordNacional")
                         .HasColumnType("bit");
 
@@ -360,6 +374,12 @@ namespace SIGEDAA.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("IdResultado");
+
+                    b.HasIndex("AtletaIdAtleta");
+
+                    b.HasIndex("CompetenciaIdCompetencia");
+
+                    b.HasIndex("DisciplinaIdDisciplina");
 
                     b.HasIndex("IdAtleta");
 
@@ -425,13 +445,11 @@ namespace SIGEDAA.Migrations
 
             modelBuilder.Entity("SIGEDAA.Models.Atleta", b =>
                 {
-                    b.HasOne("SIGEDAA.Models.Club", "Club")
+                    b.HasOne("SIGEDAA.Models.Club", null)
                         .WithMany()
                         .HasForeignKey("IdClub")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Club");
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Club", b =>
@@ -462,9 +480,36 @@ namespace SIGEDAA.Migrations
                     b.Navigation("Competencia");
                 });
 
+            modelBuilder.Entity("SIGEDAA.Models.Entrenador", b =>
+                {
+                    b.HasOne("SIGEDAA.Models.Club", null)
+                        .WithMany()
+                        .HasForeignKey("IdClub")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SIGEDAA.Models.ResultadoCompetencia", b =>
                 {
                     b.HasOne("SIGEDAA.Models.Atleta", "Atleta")
+                        .WithMany()
+                        .HasForeignKey("AtletaIdAtleta")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIGEDAA.Models.Competencia", "Competencia")
+                        .WithMany()
+                        .HasForeignKey("CompetenciaIdCompetencia")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIGEDAA.Models.Disciplina", "Disciplina")
+                        .WithMany()
+                        .HasForeignKey("DisciplinaIdDisciplina")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIGEDAA.Models.Atleta", null)
                         .WithMany()
                         .HasForeignKey("IdAtleta")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -473,16 +518,16 @@ namespace SIGEDAA.Migrations
                     b.HasOne("SIGEDAA.Models.Club", "Club")
                         .WithMany()
                         .HasForeignKey("IdClub")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SIGEDAA.Models.Competencia", "Competencia")
+                    b.HasOne("SIGEDAA.Models.Competencia", null)
                         .WithMany()
                         .HasForeignKey("IdCompetencia")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SIGEDAA.Models.Disciplina", "Disciplina")
+                    b.HasOne("SIGEDAA.Models.Disciplina", null)
                         .WithMany()
                         .HasForeignKey("IdDisciplina")
                         .OnDelete(DeleteBehavior.Restrict)

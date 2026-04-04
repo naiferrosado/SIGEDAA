@@ -10,7 +10,7 @@ namespace SIGEDAA.Data
         {
         }
 
-        
+
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Atleta> Atletas { get; set; }
@@ -64,8 +64,11 @@ namespace SIGEDAA.Data
                 b.Property(a => a.EstaturaCm).HasPrecision(5, 2);
                 b.Property(a => a.PesoKg).HasPrecision(6, 2);
 
-                // Relación con Club si existe
-                b.HasOne<Club>().WithMany().HasForeignKey(a => a.IdClub).OnDelete(DeleteBehavior.Restrict);
+                // SOLUCIÓN AL ERROR: Relación explícita con Club para evitar la columna ClubIdClub
+                b.HasOne(a => a.Club)
+                 .WithMany()
+                 .HasForeignKey(a => a.IdClub)
+                 .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Asociacion
@@ -75,8 +78,6 @@ namespace SIGEDAA.Data
                 b.ToTable("AsociacionesProvinciales");
                 b.Property(x => x.NombreAsociacion).IsRequired();
                 b.Property(x => x.Provincia).IsRequired();
-
-              
             });
 
             // Club
@@ -86,8 +87,6 @@ namespace SIGEDAA.Data
                 b.ToTable("Clubes");
                 b.Property(c => c.NombreClub).IsRequired();
                 b.HasOne<AsociacionProvincial>().WithMany().HasForeignKey(c => c.IdAsociacion).OnDelete(DeleteBehavior.Restrict);
-
-                
             });
 
             // Competencia
@@ -111,15 +110,17 @@ namespace SIGEDAA.Data
             {
                 b.HasKey(r => r.IdResultado);
                 b.ToTable("ResultadosCompetencia");
-                b.HasOne<Competencia>().WithMany().HasForeignKey(r => r.IdCompetencia).OnDelete(DeleteBehavior.Restrict);
-                b.HasOne<Atleta>().WithMany().HasForeignKey(r => r.IdAtleta).OnDelete(DeleteBehavior.Restrict);
-                b.HasOne<Disciplina>().WithMany().HasForeignKey(r => r.IdDisciplina).OnDelete(DeleteBehavior.Restrict);
                 b.Property(r => r.PuntosOtorgados).HasPrecision(10, 2);
 
-                b.HasOne<Competencia>().WithMany().HasForeignKey(r => r.IdCompetencia).OnDelete(DeleteBehavior.Restrict);
-                b.HasOne<Atleta>().WithMany().HasForeignKey(r => r.IdAtleta).OnDelete(DeleteBehavior.Restrict);
-                b.HasOne<Disciplina>().WithMany().HasForeignKey(r => r.IdDisciplina).OnDelete(DeleteBehavior.Restrict);
+                // SOLUCIÓN AL "TRIÁNGULO DE LA MUERTE": Evitamos que se borren en cascada
+                b.HasOne(r => r.Competencia).WithMany().HasForeignKey(r => r.IdCompetencia).OnDelete(DeleteBehavior.Restrict);
+                b.HasOne(r => r.Atleta).WithMany().HasForeignKey(r => r.IdAtleta).OnDelete(DeleteBehavior.Restrict);
+                b.HasOne(r => r.Disciplina).WithMany().HasForeignKey(r => r.IdDisciplina).OnDelete(DeleteBehavior.Restrict);
+
+                // LA NUEVA RELACIÓN DEL CLUB QUE NOS FALTABA
+                b.HasOne(r => r.Club).WithMany().HasForeignKey(r => r.IdClub).OnDelete(DeleteBehavior.Restrict);
             });
+
             // Configuración de la relación Muchos a Muchos (Torneos y Clubes)
             modelBuilder.Entity<CompetenciaClub>(b =>
             {
@@ -129,22 +130,15 @@ namespace SIGEDAA.Data
                 b.HasOne(cc => cc.Competencia)
                  .WithMany(c => c.ClubesInscritos)
                  .HasForeignKey(cc => cc.IdCompetencia)
-                 .OnDelete(DeleteBehavior.Cascade); // Si eliminas el torneo, se eliminan las inscripciones
+                 .OnDelete(DeleteBehavior.Cascade);
 
                 b.HasOne(cc => cc.Club)
                  .WithMany(c => c.CompetenciasParticipadas)
                  .HasForeignKey(cc => cc.IdClub)
-                 .OnDelete(DeleteBehavior.Restrict); // Protege al club para que no se borre accidentalmente
-            });
-            // Entrenador
-            modelBuilder.Entity<Entrenador>(b =>
-            {
-                b.HasKey(e => e.IdEntrenador);
-                b.ToTable("Entrenadores");
-                b.HasOne<Club>().WithMany().HasForeignKey(e => e.IdClub).OnDelete(DeleteBehavior.Restrict);
+                 .OnDelete(DeleteBehavior.Restrict);
             });
 
-            base.OnModelCreating(modelBuilder);
-        }
-    }
-}
+            // Entrenador
+           
+       }
+    } }

@@ -1,0 +1,75 @@
+﻿@model SIGEDAA.Models.ResultadoCompetencia
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="IdClub" id="hiddenClubId" />
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label class="form-label fw-bold">Torneo</label>
+            <select asp-for="IdCompetencia" id="IdCompetencia" class="form-select" asp-items="ViewBag.Competencias" required>
+                <option value="">-- Seleccione --</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Atleta</label>
+            <select asp-for="IdAtleta" id="IdAtleta" class="form-select" required disabled>
+                <option value="">-- Primero elija el Torneo --</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Club (Se asigna solo)</label>
+            <input type="text" id="txtClubNombre" class="form-control bg-light" readonly placeholder="Club del atleta" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Disciplina</label>
+            <select asp-for="IdDisciplina" class="form-select" asp-items="ViewBag.Disciplinas" required></select>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label class="form-label fw-bold">Marca</label>
+            <input asp-for="MarcaObtenida" class="form-control" required />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label class="form-label fw-bold">Posición</label>
+            <input asp-for="PosicionFinal" class="form-control" type="number" required />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Guardar Resultado</button>
+</form>
+
+@section Scripts {
+    <script>
+        var listaAtletasGlobal = [];
+
+        $("#IdCompetencia").change(function () {
+            var id = $(this).val();
+            var select = $("#IdAtleta");
+            select.empty().prop("disabled", true);
+            $("#txtClubNombre").val("");
+            $("#hiddenClubId").val("");
+
+            if (id) {
+                $.getJSON('/Resultados/ObtenerAtletasPorTorneo', { idCompetencia: id }, function (data) {
+                    listaAtletasGlobal = data; // Guardamos la info completa
+                    select.prop("disabled", false).append('<option value="">-- Seleccione Atleta --</option>');
+                    $.each(data, function (i, item) {
+                        select.append('<option value="' + item.valor + '">' + item.texto + '</option>');
+                    });
+                });
+            }
+        });
+
+        // Cuando eligen al atleta, buscamos su club en la lista que ya bajamos
+        $("#IdAtleta").change(function () {
+            var idSelected = $(this).val();
+            var atletaInfo = listaAtletasGlobal.find(a => a.valor == idSelected);
+
+            if (atletaInfo) {
+                $("#txtClubNombre").val(atletaInfo.clubNombre);
+                $("#hiddenClubId").val(atletaInfo.clubId);
+            }
+        });
+    </script>
+}

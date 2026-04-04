@@ -24,5 +24,6 @@ namespace SIGEDAA.Models
         public DateTime FechaFundacion { get; set; }
 
         public bool CertificacionAlDia { get; set; }
+        public bool EstadoActivo { get; set; } = true;
     }
 }

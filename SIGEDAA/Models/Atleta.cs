@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIGEDAA.Models
 {
@@ -24,5 +25,9 @@ namespace SIGEDAA.Models
         public decimal PesoKg { get; set; }
 
         public string TipoSangre { get; set; }
+        public bool EstadoActivo { get; set; } = true;
+        [ForeignKey("IdClub")]
+        public virtual Club Club { get; set; }
+
     }
 }

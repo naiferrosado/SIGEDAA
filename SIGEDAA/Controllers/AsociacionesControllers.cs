@@ -97,5 +97,56 @@ namespace SIGEDAA.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarEstado(int id)
+        {
+            var asociacion = await _context.AsociacionesProvinciales.FindAsync(id);
+            if (asociacion == null) return NotFound();
+
+            // Cambiamos el estado de la asociación
+            asociacion.EstadoActivo = !asociacion.EstadoActivo;
+
+            // Si la asociación se acaba de INACTIVAR, aplicamos la cascada
+            if (!asociacion.EstadoActivo)
+            {
+                // 1. Buscamos todos los clubes de esta asociación
+                var clubes = _context.Clubes.Where(c => c.IdAsociacion == id).ToList();
+
+                foreach (var club in clubes)
+                {
+                    club.EstadoActivo = false; // Inactivar Club
+
+                    // 2. Buscamos todos los atletas de este club y los inactivamos
+                    var atletas = _context.Atletas.Where(a => a.IdClub == club.IdClub).ToList();
+                    foreach (var atleta in atletas)
+                    {
+                        atleta.EstadoActivo = false; // Inactivar Atleta
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = asociacion.EstadoActivo ? "Asociación habilitada." : "Asociación y toda su estructura inhabilitada.";
+
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var asociacion = await _context.AsociacionesProvinciales.FindAsync(id);
+            if (asociacion == null) return NotFound();
+
+            // Buscamos los clubes de esta asociación
+            var clubes = await _context.Clubes
+                .Where(c => c.IdAsociacion == id)
+                .OrderBy(c => c.NombreClub)
+                .ToListAsync();
+
+            ViewBag.Clubes = clubes;
+            return View(asociacion);
+        }
     }
 }

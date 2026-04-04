@@ -152,5 +152,18 @@ namespace SIGEDAA.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarEstado(int id)
+        {
+            var atleta = await _context.Atletas.FindAsync(id);
+            if (atleta != null)
+            {
+                atleta.EstadoActivo = !atleta.EstadoActivo;
+                await _context.SaveChangesAsync();
+                TempData["Success"] = atleta.EstadoActivo ? "Atleta habilitado." : "Atleta inhabilitado.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

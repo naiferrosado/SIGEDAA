@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404001415_AgregarEstadoActivo")]
+    partial class AgregarEstadoActivo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,7 +300,9 @@ namespace SIGEDAA.Migrations
 
                     b.HasKey("IdEntrenador");
 
-                    b.ToTable("Entrenadores");
+                    b.HasIndex("IdClub");
+
+                    b.ToTable("Entrenadores", (string)null);
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Equipo", b =>
@@ -339,9 +344,6 @@ namespace SIGEDAA.Migrations
                     b.Property<int>("IdAtleta")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdClub")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdCompetencia")
                         .HasColumnType("int");
 
@@ -362,8 +364,6 @@ namespace SIGEDAA.Migrations
                     b.HasKey("IdResultado");
 
                     b.HasIndex("IdAtleta");
-
-                    b.HasIndex("IdClub");
 
                     b.HasIndex("IdCompetencia");
 
@@ -425,13 +425,11 @@ namespace SIGEDAA.Migrations
 
             modelBuilder.Entity("SIGEDAA.Models.Atleta", b =>
                 {
-                    b.HasOne("SIGEDAA.Models.Club", "Club")
+                    b.HasOne("SIGEDAA.Models.Club", null)
                         .WithMany()
                         .HasForeignKey("IdClub")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Club");
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Club", b =>
@@ -462,39 +460,34 @@ namespace SIGEDAA.Migrations
                     b.Navigation("Competencia");
                 });
 
+            modelBuilder.Entity("SIGEDAA.Models.Entrenador", b =>
+                {
+                    b.HasOne("SIGEDAA.Models.Club", null)
+                        .WithMany()
+                        .HasForeignKey("IdClub")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SIGEDAA.Models.ResultadoCompetencia", b =>
                 {
-                    b.HasOne("SIGEDAA.Models.Atleta", "Atleta")
+                    b.HasOne("SIGEDAA.Models.Atleta", null)
                         .WithMany()
                         .HasForeignKey("IdAtleta")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SIGEDAA.Models.Club", "Club")
-                        .WithMany()
-                        .HasForeignKey("IdClub")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SIGEDAA.Models.Competencia", "Competencia")
+                    b.HasOne("SIGEDAA.Models.Competencia", null)
                         .WithMany()
                         .HasForeignKey("IdCompetencia")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SIGEDAA.Models.Disciplina", "Disciplina")
+                    b.HasOne("SIGEDAA.Models.Disciplina", null)
                         .WithMany()
                         .HasForeignKey("IdDisciplina")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Atleta");
-
-                    b.Navigation("Club");
-
-                    b.Navigation("Competencia");
-
-                    b.Navigation("Disciplina");
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Club", b =>

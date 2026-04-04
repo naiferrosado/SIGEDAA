@@ -106,7 +106,13 @@
     <a href="/Clubes"><i class="fa fa-people-group"></i> Clubes</a>
     <a <a href="/Competencias"><i class="fa fa-trophy"></i> Torneos</a>
     <a href="/Asociaciones"><i class="fa fa-building"></i> Asociaciones</a>
-    <a href="#"><i class="fa fa-medal"></i> Resultados</a>
+    <a asp-controller="Disciplinas" asp-action="Index" class="nav-link">
+       <i class="fas fa-running"></i> Disciplinas
+   </a>
+    <a asp-controller="Resultados" asp-action="Index" class="nav-link">
+    <i class="fas fa-medal"></i> Resultados
+</a>
+
     <a href="/Auth/Logout"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
     
 </div>

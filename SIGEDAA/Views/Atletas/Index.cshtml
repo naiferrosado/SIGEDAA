@@ -58,7 +58,17 @@ else
                     <td>
                         <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@a.IdAtleta">Ver</a>
                         <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@a.IdAtleta">Editar</a>
-                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@a.IdAtleta">Eliminar</a>
+                        <form asp-action="CambiarEstado" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@a.IdAtleta" />
+                            @if (a.EstadoActivo)
+                            {
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar a este atleta?');">Inhabilitar</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar a este atleta?');">Habilitar</button>
+                            }
+                        </form>
                     </td>
                 </tr>
             }
