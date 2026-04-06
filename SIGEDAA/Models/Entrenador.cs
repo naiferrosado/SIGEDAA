@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIGEDAA.Models
 {
@@ -7,22 +8,32 @@ namespace SIGEDAA.Models
         [Key]
         public int IdEntrenador { get; set; }
 
-        public int IdClub { get; set; } // Club al que pertenece
-
         [Required]
+        public int IdClub { get; set; }
+
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [StringLength(100)]
         public string Nombres { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El apellido es obligatorio")]
+        [StringLength(100)]
         public string Apellidos { get; set; }
 
-        public string Especialidad { get; set; } // Ej. Velocidad, Lanzamientos
+        [StringLength(100)]
+        public string? Especialidad { get; set; }
 
+        [Range(0, 60)]
         public int AniosExperiencia { get; set; }
 
         [Phone]
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
         [EmailAddress]
-        public string Correo { get; set; }
+        public string? Correo { get; set; }
+
+        public bool EstadoActivo { get; set; } = true;
+
+        [ForeignKey("IdClub")]
+        public Club? Club { get; set; }
     }
 }

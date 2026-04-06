@@ -1,0 +1,119 @@
+﻿@model IEnumerable<SIGEDAA.Models.Entrenador>
+
+@{
+    ViewData["Title"] = "Entrenadores";
+}
+
+<div class="container mt-4">
+
+    <!-- ENCABEZADO -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Gestión de Entrenadores</h2>
+            <p class="text-muted mb-0">
+                Administra todos los entrenadores registrados en el sistema.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="fa fa-plus"></i> Nuevo Entrenador
+        </a>
+    </div>
+
+    <!-- TARJETA -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Completo</th>
+                        <th>Club</th>
+                        <th>Especialidad</th>
+                        <th>Experiencia</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.IdEntrenador</td>
+
+                                <td>
+                                    <strong>@item.Nombres @item.Apellidos</strong>
+                                </td>
+
+                                <td>
+                                    @(item.Club?.NombreClub ?? "Sin club")
+                                </td>
+
+                                <td>
+                                    @item.Especialidad
+                                </td>
+
+                                <td>
+                                    @item.AniosExperiencia años
+                                </td>
+
+                                <td>
+                                    @item.Telefono
+                                </td>
+
+                                <td>
+                                    @item.Correo
+                                </td>
+
+                                <td>
+                                    @if (item.EstadoActivo)
+                                    {
+                                        <span class="badge bg-success">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            Inactivo
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.IdEntrenador"
+                                       class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.IdEntrenador"
+                                       class="btn btn-info btn-sm text-white">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">
+                                No hay entrenadores registrados.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>

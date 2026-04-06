@@ -139,6 +139,25 @@ namespace SIGEDAA.Data
             });
 
             // Entrenador
-           
-       }
-    } }
+            modelBuilder.Entity<Entrenador>(b =>
+            {
+                b.HasKey(e => e.IdEntrenador);
+                b.ToTable("Entrenadores");
+
+                b.Property(e => e.Nombres).IsRequired();
+                b.Property(e => e.Apellidos).IsRequired();
+                b.Property(e => e.Especialidad).HasMaxLength(100);
+                b.Property(e => e.Telefono).HasMaxLength(20);
+                b.Property(e => e.Correo).HasMaxLength(100);
+
+                // RELACIÓN EXPLÍCITA CON CLUB PARA EVITAR ERRORES DE FK
+                b.HasOne(e => e.Club)
+                 .WithMany()
+                 .HasForeignKey(e => e.IdClub)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+}
