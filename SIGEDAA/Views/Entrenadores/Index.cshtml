@@ -4,9 +4,11 @@
     ViewData["Title"] = "Entrenadores";
 }
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <div class="container mt-4">
 
-    <!-- ENCABEZADO -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold">Gestión de Entrenadores</h2>
@@ -26,13 +28,9 @@
     </div>
 
     <div class="card shadow-lg border-0 rounded-4">
-        
-
-    <!-- TARJETA -->
-    <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body">
 
-            <table class="table table-hover align-middle">
+            <table id="tablaEntrenadores" class="table table-hover align-middle table-bordered" style="width:100%">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
@@ -69,47 +67,30 @@
                                     <span class="fw-bold text-primary">@nombreClub</span>
                                 </td>
 
-                                <td>
-                                    @item.Especialidad
-                                </td>
+                                <td>@item.Especialidad</td>
 
-                                <td>
-                                    @item.AniosExperiencia años
-                                </td>
+                                <td>@item.AniosExperiencia años</td>
 
-                                <td>
-                                    @item.Telefono
-                                </td>
+                                <td>@item.Telefono</td>
 
-                                <td>
-                                    @item.Correo
-                                </td>
+                                <td>@item.Correo</td>
 
                                 <td>
                                     @if (item.EstadoActivo)
                                     {
-                                        <span class="badge bg-success">
-                                            Activo
-                                        </span>
+                                        <span class="badge bg-success">Activo</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-danger">
-                                            Inactivo
-                                        </span>
+                                        <span class="badge bg-danger">Inactivo</span>
                                     }
                                 </td>
 
                                 <td class="text-center">
-                                    <a asp-action="Edit"
-                                       asp-route-id="@item.IdEntrenador"
-                                       class="btn btn-warning btn-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.IdEntrenador" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i>
                                     </a>
-
-                                    <a asp-action="Details"
-                                       asp-route-id="@item.IdEntrenador"
-                                       class="btn btn-info btn-sm text-white">
+                                    <a asp-action="Details" asp-route-id="@item.IdEntrenador" class="btn btn-info btn-sm text-white">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
@@ -129,5 +110,24 @@
 
         </div>
     </div>
-
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Inicializamos DataTables usando el ID de la tabla
+            $('#tablaEntrenadores').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "info": true
+            });
+        });
+    </script>
+}
