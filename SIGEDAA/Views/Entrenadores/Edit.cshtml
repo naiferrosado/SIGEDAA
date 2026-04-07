@@ -1,0 +1,92 @@
+﻿@model SIGEDAA.Models.Entrenador
+
+@{
+    ViewData["Title"] = "Editar Entrenador";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Editar Entrenador</h2>
+        <p class="text-muted mb-0">
+            Modifique la información del entrenador o cambie su estado en el sistema.
+        </p>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <form asp-action="Edit" method="post">
+
+                <input type="hidden" asp-for="IdEntrenador" />
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Nombres</label>
+                        <input asp-for="Nombres" class="form-control" />
+                        <span asp-validation-for="Nombres" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Apellidos</label>
+                        <input asp-for="Apellidos" class="form-control" />
+                        <span asp-validation-for="Apellidos" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Especialidad</label>
+                        <input asp-for="Especialidad" class="form-control" />
+                        <span asp-validation-for="Especialidad" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Años de experiencia</label>
+                        <input asp-for="AniosExperiencia" type="number" class="form-control" />
+                        <span asp-validation-for="AniosExperiencia" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Correo electrónico</label>
+                        <input asp-for="Correo" type="email" class="form-control" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12 mt-2 mb-3">
+                        <div class="form-check form-switch fs-5">
+                            <input class="form-check-input" type="checkbox" role="switch" id="estadoSwitch" asp-for="EstadoActivo">
+                            <label class="form-check-label ms-2 fw-bold text-primary" for="estadoSwitch">Entrenador Activo en el Sistema</label>
+                        </div>
+                        <small class="text-muted">Apague este interruptor para inhabilitar al entrenador sin borrar su historial.</small>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a asp-action="Index" class="btn btn-secondary shadow-sm">
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn btn-success shadow-sm">
+                        <i class="fa fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

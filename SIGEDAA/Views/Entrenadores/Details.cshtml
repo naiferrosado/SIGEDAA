@@ -1,0 +1,72 @@
+﻿@model SIGEDAA.Models.Entrenador
+
+@{
+    ViewData["Title"] = "Detalles del Entrenador";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Perfil del Entrenador</h2>
+            <p class="text-muted mb-0">Información detallada y estado actual.</p>
+        </div>
+        <div>
+            @if (Model.EstadoActivo)
+            {
+                <span class="badge bg-success fs-5 shadow-sm">Activo</span>
+            }
+            else
+            {
+                <span class="badge bg-danger fs-5 shadow-sm">Inhabilitado</span>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+
+            <div class="row mb-4">
+                <div class="col-md-12 text-center mb-4">
+                    <i class="fa fa-user-tie text-primary" style="font-size: 4rem;"></i>
+                    <h3 class="mt-2 fw-bold">@Model.Nombres @Model.Apellidos</h3>
+                    <p class="text-muted fs-5">@Model.Especialidad</p>
+                </div>
+            </div>
+
+            <hr class="text-muted mb-4" />
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h6 class="text-muted text-uppercase fw-bold mb-1"><i class="fa fa-briefcase me-2"></i>Experiencia</h6>
+                    <p class="fs-5 mb-0">@Model.AniosExperiencia años</p>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <h6 class="text-muted text-uppercase fw-bold mb-1"><i class="fa fa-phone me-2"></i>Teléfono</h6>
+                    <p class="fs-5 mb-0">@(string.IsNullOrEmpty(Model.Telefono) ? "No registrado" : Model.Telefono)</p>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <h6 class="text-muted text-uppercase fw-bold mb-1"><i class="fa fa-envelope me-2"></i>Correo Electrónico</h6>
+                    <p class="fs-5 mb-0">@(string.IsNullOrEmpty(Model.Correo) ? "No registrado" : Model.Correo)</p>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <h6 class="text-muted text-uppercase fw-bold mb-1"><i class="fa fa-id-badge me-2"></i>ID en Sistema</h6>
+                    <p class="fs-5 mb-0">#@Model.IdEntrenador</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer bg-light p-3 border-0 rounded-bottom-4 d-flex justify-content-end gap-2">
+            <a asp-action="Index" class="btn btn-secondary shadow-sm">
+                <i class="fa fa-arrow-left"></i> Volver a la Lista
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.IdEntrenador" class="btn btn-warning shadow-sm">
+                <i class="fa fa-edit"></i> Editar Entrenador
+            </a>
+        </div>
+    </div>
+
+</div>
