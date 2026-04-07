@@ -15,10 +15,18 @@
             </p>
         </div>
 
-        <a asp-action="Create" class="btn btn-primary shadow-sm">
-            <i class="fa fa-plus"></i> Nuevo Entrenador
-        </a>
+        <div class="d-flex gap-2">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary shadow-sm">
+                Dashboard
+            </a>
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                Nuevo Entrenador
+            </a>
+        </div>
     </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        
 
     <!-- TARJETA -->
     <div class="card shadow-lg border-0 rounded-4">
@@ -52,7 +60,13 @@
                                 </td>
 
                                 <td>
-                                    @(item.Club?.NombreClub ?? "Sin club")
+                                    @{
+                                        var clubes = ViewBag.ClubesDirigidos as Dictionary<int, string>;
+                                        string nombreClub = (clubes != null && clubes.ContainsKey(item.IdEntrenador))
+                                        ? clubes[item.IdEntrenador]
+                                        : "Sin club";
+                                    }
+                                    <span class="fw-bold text-primary">@nombreClub</span>
                                 </td>
 
                                 <td>

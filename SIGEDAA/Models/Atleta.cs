@@ -8,7 +8,7 @@ namespace SIGEDAA.Models
         [Key]
         public int IdAtleta { get; set; }
 
-        public int IdClub { get; set; } // Relación con su club
+        
 
         [Required]
         public string Nombres { get; set; }
@@ -26,8 +26,10 @@ namespace SIGEDAA.Models
 
         public string TipoSangre { get; set; }
         public bool EstadoActivo { get; set; } = true;
+        public int IdClub { get; set; }
+
         [ForeignKey("IdClub")]
-        public virtual Club Club { get; set; }
+        public virtual Club? Club { get; set; } // <--- ESTE ES EL PUENTE QUE FALTA
 
     }
 }

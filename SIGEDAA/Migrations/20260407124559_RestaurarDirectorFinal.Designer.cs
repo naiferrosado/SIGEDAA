@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407124559_RestaurarDirectorFinal")]
+    partial class RestaurarDirectorFinal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,10 +136,11 @@ namespace SIGEDAA.Migrations
                     b.Property<int>("IdAsociacion")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdEntrenadorPrincipal")
-                        .HasColumnType("int");
-
                     b.Property<string>("NombreClub")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreDirector")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -147,8 +151,6 @@ namespace SIGEDAA.Migrations
                     b.HasKey("IdClub");
 
                     b.HasIndex("IdAsociacion");
-
-                    b.HasIndex("IdEntrenadorPrincipal");
 
                     b.ToTable("Clubes", (string)null);
                 });
@@ -289,7 +291,7 @@ namespace SIGEDAA.Migrations
                     b.Property<bool>("EstadoActivo")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("IdClub")
+                    b.Property<int>("IdClub")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombres")
@@ -449,13 +451,6 @@ namespace SIGEDAA.Migrations
                         .HasForeignKey("IdAsociacion")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SIGEDAA.Models.Entrenador", "EntrenadorPrincipal")
-                        .WithMany()
-                        .HasForeignKey("IdEntrenadorPrincipal")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("EntrenadorPrincipal");
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.CompetenciaClub", b =>
@@ -481,7 +476,9 @@ namespace SIGEDAA.Migrations
                 {
                     b.HasOne("SIGEDAA.Models.Club", "Club")
                         .WithMany()
-                        .HasForeignKey("IdClub");
+                        .HasForeignKey("IdClub")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Club");
                 });

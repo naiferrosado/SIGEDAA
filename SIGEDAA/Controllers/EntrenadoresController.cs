@@ -20,13 +20,22 @@ namespace SIGEDAA.Controllers
         public async Task<IActionResult> Index()
         {
             var entrenadores = await _context.Entrenadores
-                .Include(e => e.Club)
                 .OrderBy(e => e.Apellidos)
-                .ToListAsync();
+                .ToArrayAsync();
+
+            // Agrupamos por ID del entrenador en caso de que dirijan más de un club
+            var clubesDirigidos = await _context.Clubes
+                .Where(c => c.IdEntrenadorPrincipal != null)
+                .GroupBy(c => c.IdEntrenadorPrincipal.Value)
+                .ToDictionaryAsync(
+                    g => g.Key,
+                    g => string.Join(" y ", g.Select(c => c.NombreClub))
+                );
+
+            ViewBag.ClubesDirigidos = clubesDirigidos;
 
             return View(entrenadores);
         }
-
         public IActionResult Create()
         {
             ViewBag.Clubes = new SelectList(
@@ -41,7 +50,8 @@ namespace SIGEDAA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Entrenador entrenador)
-        {
+        {// Le decimos a C# que no exija un Club al crear al entrenador
+            ModelState.Remove("Club");
             if (ModelState.IsValid)
             {
                 _context.Add(entrenador);

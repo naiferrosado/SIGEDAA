@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIGEDAA.Models
 {
@@ -14,8 +15,10 @@ namespace SIGEDAA.Models
         public string NombreClub { get; set; }
 
         public string DireccionSede { get; set; }
+        public int? IdEntrenadorPrincipal { get; set; }
 
-        public string NombreDirector { get; set; }
+        [ForeignKey("IdEntrenadorPrincipal")]
+        public virtual Entrenador? EntrenadorPrincipal { get; set; }
 
         [Phone]
         public string Telefono { get; set; }

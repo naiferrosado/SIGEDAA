@@ -10,6 +10,7 @@
     </div>
     <div class="card-body">
         <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="alert alert-danger" style="display: @(ViewData.ModelState.IsValid ? "none" : "block")"></div>
             <input type="hidden" asp-for="IdClub" />
 
             <div class="row">
@@ -26,9 +27,11 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label asp-for="NombreDirector" class="form-label">Director / Entrenador Principal</label>
-                    <input asp-for="NombreDirector" class="form-control" />
-                </div>
+                    <label asp-for="IdEntrenadorPrincipal" class="form-label">Director / Entrenador Principal</label>
+                    <select asp-for="IdEntrenadorPrincipal" class="form-select" asp-items="ViewBag.Entrenadores">
+                        <option value="">-- Seleccione un Entrenador --</option>
+                    </select>
+                </div>>
                 <div class="col-md-6 mb-3">
                     <label asp-for="Telefono" class="form-label">Teléfono de Contacto</label>
                     <input asp-for="Telefono" class="form-control" />

@@ -8,8 +8,8 @@ namespace SIGEDAA.Models
         [Key]
         public int IdEntrenador { get; set; }
 
-        [Required]
-        public int IdClub { get; set; }
+        
+        public int? IdClub { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
         [StringLength(100)]
@@ -33,7 +33,9 @@ namespace SIGEDAA.Models
 
         public bool EstadoActivo { get; set; } = true;
 
+       
         [ForeignKey("IdClub")]
-        public Club? Club { get; set; }
+        public virtual Club? Club { get; set; }
+
     }
 }

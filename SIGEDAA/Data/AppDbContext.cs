@@ -87,6 +87,12 @@ namespace SIGEDAA.Data
                 b.ToTable("Clubes");
                 b.Property(c => c.NombreClub).IsRequired();
                 b.HasOne<AsociacionProvincial>().WithMany().HasForeignKey(c => c.IdAsociacion).OnDelete(DeleteBehavior.Restrict);
+            // Regla para el Entrenador Principal del Club
+            modelBuilder.Entity<Club>()
+                .HasOne(c => c.EntrenadorPrincipal)
+                .WithMany()
+                .HasForeignKey(c => c.IdEntrenadorPrincipal)
+                .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Competencia
@@ -150,11 +156,7 @@ namespace SIGEDAA.Data
                 b.Property(e => e.Telefono).HasMaxLength(20);
                 b.Property(e => e.Correo).HasMaxLength(100);
 
-                // RELACIÓN EXPLÍCITA CON CLUB PARA EVITAR ERRORES DE FK
-                b.HasOne(e => e.Club)
-                 .WithMany()
-                 .HasForeignKey(e => e.IdClub)
-                 .OnDelete(DeleteBehavior.Restrict);
+              
             });
 
             base.OnModelCreating(modelBuilder);

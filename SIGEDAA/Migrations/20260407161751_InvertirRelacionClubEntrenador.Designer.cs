@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407161751_InvertirRelacionClubEntrenador")]
+    partial class InvertirRelacionClubEntrenador
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,7 +292,7 @@ namespace SIGEDAA.Migrations
                     b.Property<bool>("EstadoActivo")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("IdClub")
+                    b.Property<int>("IdClub")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombres")
@@ -481,7 +484,9 @@ namespace SIGEDAA.Migrations
                 {
                     b.HasOne("SIGEDAA.Models.Club", "Club")
                         .WithMany()
-                        .HasForeignKey("IdClub");
+                        .HasForeignKey("IdClub")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Club");
                 });

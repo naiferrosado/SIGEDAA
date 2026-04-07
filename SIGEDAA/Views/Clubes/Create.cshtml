@@ -24,8 +24,10 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label asp-for="NombreDirector" class="form-label">Director / Entrenador Principal</label>
-                    <input asp-for="NombreDirector" class="form-control" />
+                    <label asp-for="IdEntrenadorPrincipal" class="form-label">Director / Entrenador Principal</label>
+                    <select asp-for="IdEntrenadorPrincipal" class="form-select" asp-items="ViewBag.Entrenadores">
+                        <option value="">-- Seleccione un Entrenador --</option>
+                    </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="Telefono" class="form-label">Teléfono de Contacto</label>

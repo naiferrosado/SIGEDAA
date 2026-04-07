@@ -37,13 +37,21 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Clubes/Create (Este muestra la pantalla vacía)
+        // GET: /Clubes/Create
         [HttpGet]
         public IActionResult Create()
         {
+            // 1. Cargamos las Asociaciones
             ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.Where(a => a.EstadoActivo == true).ToList(), "IdAsociacion", "NombreAsociacion");
+
+            // 2. CARGAMOS LOS ENTRENADORES (Asegúrate de que este código esté aquí)
+            var listaEntrenadores = _context.Entrenadores.Where(e => e.EstadoActivo)
+                .Select(e => new { Id = e.IdEntrenador, NombreCompleto = e.Nombres + " " + e.Apellidos }).ToList();
+
+            ViewBag.Entrenadores = new SelectList(listaEntrenadores, "Id", "NombreCompleto");
+
             return View();
         }
-
         // POST: /Clubes/Create (Este recibe los datos y los guarda en BD)
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -52,7 +60,9 @@ namespace SIGEDAA.Controllers
             // 1. Ignorar las propiedades de relación para que la validación pase
             ModelState.Remove("CompetenciasParticipadas");
             ModelState.Remove("Asociacion");
-
+            ModelState.Remove("CompetenciasParticipadas");
+            ModelState.Remove("Asociacion");
+            ModelState.Remove("EntrenadorPrincipal");
             if (ModelState.IsValid)
             {
                 _context.Add(club);
@@ -63,6 +73,10 @@ namespace SIGEDAA.Controllers
 
             // Si hay error en la validación, recarga el Select
             ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales.Where(a => a.EstadoActivo == true).ToList(), "IdAsociacion", "NombreAsociacion");
+            var listaEntrenadores = _context.Entrenadores.Where(e => e.EstadoActivo)
+                 .Select(e => new { Id = e.IdEntrenador, NombreCompleto = e.Nombres + " " + e.Apellidos }).ToList();
+
+            ViewBag.Entrenadores = new SelectList(listaEntrenadores, "Id", "NombreCompleto");
             return View(club);
         }
         // GET: /Clubes/Edit/5
@@ -75,6 +89,10 @@ namespace SIGEDAA.Controllers
             if (club == null) return NotFound();
 
             ViewBag.Asociaciones = new SelectList(_context.AsociacionesProvinciales, "IdAsociacion", "NombreAsociacion", club.IdAsociacion);
+            var listaEntrenadores = _context.Entrenadores.Where(e => e.EstadoActivo)
+                 .Select(e => new { Id = e.IdEntrenador, NombreCompleto = e.Nombres + " " + e.Apellidos }).ToList();
+
+            ViewBag.Entrenadores = new SelectList(listaEntrenadores, "Id", "NombreCompleto");
             return View(club);
         }
 
@@ -88,7 +106,9 @@ namespace SIGEDAA.Controllers
             // 1. Ignorar las propiedades de relación
             ModelState.Remove("CompetenciasParticipadas");
             ModelState.Remove("Asociacion");
-
+            ModelState.Remove("CompetenciasParticipadas");
+            ModelState.Remove("Asociacion");
+            ModelState.Remove("EntrenadorPrincipal");
             if (ModelState.IsValid)
             {
                 try
