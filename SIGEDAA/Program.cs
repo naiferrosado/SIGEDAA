@@ -31,6 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 app.UseSession();
+
 try
 {
     await DemoDataSeeder.SeedAsync(app.Services);

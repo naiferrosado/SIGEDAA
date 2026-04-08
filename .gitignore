@@ -62,6 +62,8 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+build-verify*/
+App_DataProtectionKeys/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
