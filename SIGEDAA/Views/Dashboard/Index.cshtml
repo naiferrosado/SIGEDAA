@@ -57,14 +57,24 @@
         justify-content: space-between;
     }
 
-    /* CARDS */
+    /* CARDS ACTUALIZADAS PARA SER ENLACES INTERACTIVOS */
     .card-stat {
         border: none;
         border-radius: 15px;
         color: white;
         padding: 25px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        display: block; /* Necesario para que el enlace tome forma de caja */
+        text-decoration: none; /* Quita el subrayado del texto */
+        transition: transform 0.2s ease, box-shadow 0.2s ease; /* Efecto suave */
     }
+
+        /* Efecto al pasar el mouse por encima (Hover) */
+        .card-stat:hover {
+            color: white;
+            transform: translateY(-5px); /* Levanta la tarjeta 5px */
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* Aumenta la sombra */
+        }
 
     .gradient-blue {
         background: linear-gradient(135deg,#3b82f6,#2563eb);
@@ -117,68 +127,68 @@
     <div class="row g-4">
 
         <div class="col-md-3">
-            <div class="card-stat gradient-blue">
+            <a asp-controller="Atletas" asp-action="Index" class="card-stat gradient-blue">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h3>@(ViewBag.AtletasCount ?? 0)</h3>
-                        <p>Atletas</p>
+                        <p class="mb-0">Atletas</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-running"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-md-3">
-            <div class="card-stat gradient-green">
+            <a asp-controller="Clubes" asp-action="Index" class="card-stat gradient-green">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h3>@(ViewBag.EquiposCount ?? 0)</h3>
-                        <p>Equipos</p>
+                        <h3>@(ViewBag.ClubesCount ?? 0)</h3>
+                        <p class="mb-0">Clubes</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-people-group"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-md-3">
-            <div class="card-stat gradient-orange">
+            <a asp-controller="Competencias" asp-action="Index" class="card-stat gradient-orange">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h3>@(ViewBag.TorneosCount ?? 0)</h3>
-                        <p>Torneos</p>
+                        <p class="mb-0">Torneos</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-trophy"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-md-3">
-            <div class="card-stat gradient-red">
+            <a asp-controller="Resultados" asp-action="Index" class="card-stat gradient-red">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h3>@(ViewBag.ResultadosCount ?? 0)</h3>
-                        <p>Resultados</p>
+                        <p class="mb-0">Resultados</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-medal"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
     </div>
 
     <div class="mt-5">
-        <div class="card p-4 shadow-sm">
-            <h4>Bienvenido al sistema SIGEDAA</h4>
-            <p>
-                Desde este panel puedes administrar atletas, equipos,
+        <div class="card p-4 shadow-sm border-0" style="border-radius: 15px;">
+            <h4 class="fw-bold">Bienvenido al sistema SIGEDAA</h4>
+            <p class="text-muted mb-0">
+                Desde este panel puedes administrar atletas, clubes,
                 torneos, entrenadores y resultados del sistema de gestión de atletismo.
             </p>
         </div>

@@ -9,7 +9,8 @@ namespace SIGEDAA.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
-        private readonly AppDbContext _context;
+        // SIN private readonly
+        public AppDbContext _context;
 
         public DashboardController(AppDbContext context)
         {
@@ -18,8 +19,12 @@ namespace SIGEDAA.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Contamos los registros reales en la base de datos
             ViewBag.AtletasCount = await _context.Atletas.CountAsync();
-            ViewBag.EquiposCount = await _context.Equipos.CountAsync();
+
+            // Reemplazamos Equipos por Clubes
+            ViewBag.ClubesCount = await _context.Clubes.CountAsync();
+
             ViewBag.TorneosCount = await _context.Competencias.CountAsync();
             ViewBag.ResultadosCount = await _context.ResultadosCompetencia.CountAsync();
 
