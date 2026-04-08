@@ -17,13 +17,6 @@
 
         <div class="card-body p-4 text-center">
 
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-warning fw-bold shadow-sm" role="alert">
-                    <i class="fas fa-lock me-2"></i> @TempData["Error"]
-                </div>
-            }
-
             <h5 class="text-muted mb-3">¿Estás completamente seguro de eliminar esta prueba?</h5>
 
             <div class="p-3 bg-light border border-danger border-opacity-25 rounded-3 mb-4">

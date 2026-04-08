@@ -33,18 +33,6 @@ namespace SIGEDAA.Data
                 b.Property(u => u.NombreCompleto).HasColumnName("Nombre");
                 b.Property(u => u.CorreoElectronico).HasColumnName("Email");
                 b.Property(u => u.ClaveAcceso).IsRequired();
-
-                // AGREGAR EL USUARIO POR DEFECTO
-                b.HasData(new Usuario
-                {
-                    IdUsuario = 1,
-                    NombreCompleto = "Administrador Principal",
-                    CorreoElectronico = "admin@fdaa.com",
-                    ClaveAcceso = "Admin123",
-                    Rol = "Administrador",
-                    EstadoActivo = true,
-                    FechaRegistro = new DateTime(2026, 3, 18)
-                });
             });
 
             // Equipo
@@ -87,12 +75,10 @@ namespace SIGEDAA.Data
                 b.ToTable("Clubes");
                 b.Property(c => c.NombreClub).IsRequired();
                 b.HasOne<AsociacionProvincial>().WithMany().HasForeignKey(c => c.IdAsociacion).OnDelete(DeleteBehavior.Restrict);
-            // Regla para el Entrenador Principal del Club
-            modelBuilder.Entity<Club>()
-                .HasOne(c => c.EntrenadorPrincipal)
-                .WithMany()
-                .HasForeignKey(c => c.IdEntrenadorPrincipal)
-                .OnDelete(DeleteBehavior.Restrict);
+                b.HasOne(c => c.EntrenadorPrincipal)
+                    .WithMany()
+                    .HasForeignKey(c => c.IdEntrenadorPrincipal)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Competencia

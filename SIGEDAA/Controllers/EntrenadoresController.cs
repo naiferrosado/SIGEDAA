@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SIGEDAA.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador,Presidente,Juez")]
     public class EntrenadoresController : Controller
     {
         private readonly AppDbContext _context;
@@ -30,8 +30,8 @@ namespace SIGEDAA.Controllers
 
             // Agrupamos por ID del entrenador en caso de que dirijan más de un club
             var clubesDirigidos = await _context.Clubes
-                .Where(c => c.IdEntrenadorPrincipal != null)
-                .GroupBy(c => c.IdEntrenadorPrincipal.Value)
+                .Where(c => c.IdEntrenadorPrincipal.HasValue)
+                .GroupBy(c => c.IdEntrenadorPrincipal!.Value)
                 .ToDictionaryAsync(
                     g => g.Key,
                     g => string.Join(" y ", g.Select(c => c.NombreClub))
@@ -45,6 +45,7 @@ namespace SIGEDAA.Controllers
       
         // CREATE (Crear)
       
+        [Authorize(Roles = "Administrador,Presidente")]
         public IActionResult Create()
         {
             ViewBag.Clubes = new SelectList(
@@ -56,6 +57,7 @@ namespace SIGEDAA.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Entrenador entrenador)
@@ -102,6 +104,7 @@ namespace SIGEDAA.Controllers
       
         // EDIT (Editar e Inhabilitar)
        
+        [Authorize(Roles = "Administrador,Presidente")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -119,6 +122,7 @@ namespace SIGEDAA.Controllers
             return View(entrenador);
         }
 
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Entrenador entrenador)

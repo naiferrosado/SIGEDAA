@@ -1,6 +1,7 @@
-using SIGEDAA.Data;
+ï»¿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies; // Agregamos esta librería
+using SIGEDAA.Data;
+using SIGEDAA.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,19 +11,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddSingleton<IAuditTrailService, AuditTrailService>();
 
-// ---> CONFIGURACION DEL SERVICIO DE AUTENTICACIÓN
+// ---> CONFIGURACION DEL SERVICIO DE AUTENTICACION
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Auth/Login"; // Ruta a la que te mandará al intentar entrar sin permiso
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo que dura la sesión activa
-        options.AccessDeniedPath = "/Auth/Login";
+        options.LoginPath = "/Auth/Login"; // Ruta a la que te mandara al intentar entrar sin permiso
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo que dura la sesion activa
+        options.SlidingExpiration = true;
     });
-
 
 var app = builder.Build();
 app.UseSession();
+await DemoDataSeeder.SeedAsync(app.Services);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -36,7 +41,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ACTIVACION EL MIDDLEWARE DE AUTENTICACIÓN <---
+// ACTIVACION DEL MIDDLEWARE DE AUTENTICACION <---
 app.UseAuthentication(); // IMPORTANTE: Debe ir estrictamente ANTES de UseAuthorization
 app.UseAuthorization();
 

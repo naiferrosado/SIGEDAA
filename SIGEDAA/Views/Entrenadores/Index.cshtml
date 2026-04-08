@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Entrenadores";
+    var puedeGestionarEntrenadores = User.IsInRole("Administrador") || User.IsInRole("Presidente");
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -9,21 +10,22 @@
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="page-header">
         <div>
-            <h2 class="fw-bold">Gestión de Entrenadores</h2>
-            <p class="text-muted mb-0">
-                Administra todos los entrenadores registrados en el sistema.
-            </p>
+            <h1>Entrenadores</h1>
+            <p>Administra los entrenadores registrados, su especialidad y los clubes que dirigen.</p>
         </div>
 
-        <div class="d-flex gap-2">
+        <div class="page-actions">
             <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary shadow-sm">
                 Dashboard
             </a>
-            <a asp-action="Create" class="btn btn-primary shadow-sm">
-                Nuevo Entrenador
-            </a>
+            @if (puedeGestionarEntrenadores)
+            {
+                <a asp-action="Create" class="btn btn-primary shadow-sm">
+                    Nuevo Entrenador
+                </a>
+            }
         </div>
     </div>
 
@@ -87,9 +89,12 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a asp-action="Edit" asp-route-id="@item.IdEntrenador" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
+                                    @if (puedeGestionarEntrenadores)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.IdEntrenador" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    }
                                     <a asp-action="Details" asp-route-id="@item.IdEntrenador" class="btn btn-info btn-sm text-white">
                                         <i class="fa fa-eye"></i>
                                     </a>
@@ -100,9 +105,15 @@
                     else
                     {
                         <tr>
-                            <td colspan="9" class="text-center text-muted">
-                                No hay entrenadores registrados.
-                            </td>
+                            <td class="text-center text-muted">Sin registros</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">-</td>
+                            <td class="text-center text-muted">No hay entrenadores registrados.</td>
                         </tr>
                     }
                 </tbody>

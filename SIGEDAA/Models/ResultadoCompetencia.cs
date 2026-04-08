@@ -20,7 +20,7 @@ namespace SIGEDAA.Models;
     public int IdDisciplina { get; set; }
 
     [Required]
-    public string MarcaObtenida { get; set; }
+    public string MarcaObtenida { get; set; } = string.Empty;
 
     public int PosicionFinal { get; set; }
     public decimal PuntosOtorgados { get; set; }
@@ -28,11 +28,11 @@ namespace SIGEDAA.Models;
 
     // Propiedades de navegación
     [ForeignKey("IdCompetencia")]
-    public virtual Competencia Competencia { get; set; }
+    public virtual Competencia? Competencia { get; set; }
     [ForeignKey("IdAtleta")]
-    public virtual Atleta Atleta { get; set; }
+    public virtual Atleta? Atleta { get; set; }
     [ForeignKey("IdClub")]
-    public virtual Club Club { get; set; } // <--- NUEVA NAVEGACIÓN
+    public virtual Club? Club { get; set; } // <--- NUEVA NAVEGACIÓN
     [ForeignKey("IdDisciplina")]
-    public virtual Disciplina Disciplina { get; set; }
+    public virtual Disciplina? Disciplina { get; set; }
 }

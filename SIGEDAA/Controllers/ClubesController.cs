@@ -6,11 +6,12 @@ using SIGEDAA.Data;
 using SIGEDAA.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SIGEDAA.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador,Presidente,Juez")]
     public class ClubesController : Controller
     {
         private readonly AppDbContext _context;
@@ -38,6 +39,7 @@ namespace SIGEDAA.Controllers
 
         // GET: /Clubes/Create (Este muestra la pantalla vacía)
         // GET: /Clubes/Create
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -53,6 +55,7 @@ namespace SIGEDAA.Controllers
             return View();
         }
         // POST: /Clubes/Create (Este recibe los datos y los guarda en BD)
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Club club)
@@ -80,6 +83,7 @@ namespace SIGEDAA.Controllers
             return View(club);
         }
         // GET: /Clubes/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -97,6 +101,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Clubes/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Club club)
@@ -130,6 +135,7 @@ namespace SIGEDAA.Controllers
             return View(club);
         }
         // POST: /Clubes/Delete
+        [Authorize(Roles = "Administrador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -175,6 +181,7 @@ namespace SIGEDAA.Controllers
 
             return View(club);
         }
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int id)
@@ -198,6 +205,36 @@ namespace SIGEDAA.Controllers
             TempData["Success"] = club.EstadoActivo ? "Club habilitado." : "Club y sus atletas inhabilitados.";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<FileResult> ExportarCsv()
+        {
+            List<Club> clubes = await _context.Clubes.OrderBy(c => c.NombreClub).ToListAsync();
+            Dictionary<int, string> asociaciones = await _context.AsociacionesProvinciales
+                .ToDictionaryAsync(a => a.IdAsociacion, a => a.NombreAsociacion);
+
+            var csv = new StringBuilder();
+            csv.AppendLine("NombreClub,Asociacion,Telefono,FechaInscripcion,Estado");
+
+            foreach (Club club in clubes)
+            {
+                asociaciones.TryGetValue(club.IdAsociacion, out string? nombreAsociacion);
+                csv.AppendLine(string.Join(",",
+                    EscaparCsv(club.NombreClub),
+                    EscaparCsv(nombreAsociacion),
+                    EscaparCsv(club.Telefono),
+                    club.FechaInscripcion.ToString("yyyy-MM-dd"),
+                    club.EstadoActivo ? "Activo" : "Inactivo"));
+            }
+
+            return File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv", $"clubes-{DateTime.Now:yyyyMMdd}.csv");
+        }
+
+        private static string EscaparCsv(string? valor)
+        {
+            string limpio = valor ?? string.Empty;
+            return $"\"{limpio.Replace("\"", "\"\"")}\"";
         }
 
     }

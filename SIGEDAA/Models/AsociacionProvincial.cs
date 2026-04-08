@@ -8,18 +8,18 @@ namespace SIGEDAA.Models
         public int IdAsociacion { get; set; }
 
         [Required]
-        public string NombreAsociacion { get; set; }
+        public string NombreAsociacion { get; set; } = string.Empty;
 
         [Required]
-        public string Provincia { get; set; }
+        public string Provincia { get; set; } = string.Empty;
 
-        public string NombrePresidente { get; set; }
+        public string NombrePresidente { get; set; } = string.Empty;
 
         [Phone]
-        public string TelefonoContacto { get; set; }
+        public string TelefonoContacto { get; set; } = string.Empty;
 
         [EmailAddress]
-        public string CorreoContacto { get; set; }
+        public string CorreoContacto { get; set; } = string.Empty;
 
         public DateTime FechaFundacion { get; set; }
 

@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Resultados Deportivos";
+    var esAdministrador = User.IsInRole("Administrador");
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -60,21 +61,17 @@
     }
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-    <h2 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Panel de Resultados</h2>
-    <div class="d-flex gap-2">
+<div class="page-header mt-2">
+    <div>
+        <h1>Resultados</h1>
+        <p>Filtra marcas oficiales por torneo y corrige registros manteniendo la clasificacion actualizada.</p>
+    </div>
+    <div class="page-actions">
         <a asp-controller="Dashboard" asp-action="Index" class="btn btn-light shadow-sm border" style="border-radius: 8px;">Volver al Dashboard</a>
+        <a asp-action="ExportarCsv" class="btn btn-secondary shadow-sm">Exportar CSV</a>
         <a asp-action="Create" class="btn btn-primary-custom shadow-sm text-white">+ Registrar Nueva Marca</a>
     </div>
 </div>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 10px;">
-        <strong>¡Éxito!</strong> @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
 <div class="card card-custom mb-4">
     <div class="card-body bg-light" style="border-radius: 15px;">
@@ -153,11 +150,14 @@
                                     <a asp-action="Edit" asp-route-id="@item.IdResultado" class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-bold me-1">
                                         Editar
                                     </a>
-                                    <form asp-action="Delete" asp-route-id="@item.IdResultado" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" onclick="return confirm('¿Eliminar esta marca permanentemente?');">
-                                            Eliminar
-                                        </button>
-                                    </form>
+                                    @if (esAdministrador)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.IdResultado" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" onclick="return confirm('¿Eliminar esta marca permanentemente?');">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -165,11 +165,13 @@
                     else
                     {
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-5">
-                                <div class="fs-1 mb-2">🏅</div>
-                                <h5 class="fw-bold">Sin resultados</h5>
-                                <p class="mb-0">Aún no hay resultados registrados.</p>
-                            </td>
+                            <td class="text-center text-muted py-5">Sin resultados</td>
+                            <td class="text-center text-muted py-5">-</td>
+                            <td class="text-center text-muted py-5">-</td>
+                            <td class="text-center text-muted py-5">-</td>
+                            <td class="text-center text-muted py-5">-</td>
+                            <td class="text-center text-muted py-5">-</td>
+                            <td class="text-center text-muted py-5">Aun no hay resultados registrados.</td>
                         </tr>
                     }
                 </tbody>

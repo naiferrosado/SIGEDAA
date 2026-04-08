@@ -1,197 +1,267 @@
-﻿@{
+@{
     ViewData["Title"] = "Dashboard";
+    var esAdministrador = User.IsInRole("Administrador");
+    var esPresidente = User.IsInRole("Presidente");
+    var esJuez = User.IsInRole("Juez");
+
+    var puedeVerUsuarios = esAdministrador;
+    var puedeVerAtletas = esAdministrador || esPresidente || esJuez;
+    var puedeVerClubes = esAdministrador || esPresidente || esJuez;
+    var puedeVerEntrenadores = esAdministrador || esPresidente || esJuez;
+    var puedeVerCompetencias = esAdministrador || esJuez;
+    var puedeVerAsociaciones = esAdministrador || esPresidente || esJuez;
+    var puedeVerDisciplinas = esAdministrador;
+    var puedeVerResultados = esAdministrador || esJuez;
+
+    var nombreRol = esAdministrador ? "Administrador" : esPresidente ? "Presidente" : "Juez";
 }
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<style>
-    body {
-        background: #f1f5f9;
-        font-family: Segoe UI;
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-        position: fixed;
-        width: 250px;
-        height: 100vh;
-        background: linear-gradient(180deg,#0f172a,#1e293b);
-        color: white;
-        padding-top: 30px;
-    }
-
-        .sidebar h4 {
-            text-align: center;
-            margin-bottom: 40px;
-            font-weight: 600;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 14px 25px;
-            color: #cbd5f5;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-            .sidebar a:hover {
-                background: #334155;
-                color: white;
-            }
-
-    /* CONTENT */
-    .content {
-        margin-left: 250px;
-        padding: 30px;
-    }
-
-    /* TOPBAR */
-    .topbar {
-        background: white;
-        padding: 15px 25px;
-        border-radius: 10px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        display: flex;
-        justify-content: space-between;
-    }
-
-    /* CARDS ACTUALIZADAS PARA SER ENLACES INTERACTIVOS */
-    .card-stat {
-        border: none;
-        border-radius: 15px;
-        color: white;
-        padding: 25px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-        display: block; /* Necesario para que el enlace tome forma de caja */
-        text-decoration: none; /* Quita el subrayado del texto */
-        transition: transform 0.2s ease, box-shadow 0.2s ease; /* Efecto suave */
-    }
-
-        /* Efecto al pasar el mouse por encima (Hover) */
-        .card-stat:hover {
-            color: white;
-            transform: translateY(-5px); /* Levanta la tarjeta 5px */
-            box-shadow: 0 15px 25px rgba(0,0,0,0.15); /* Aumenta la sombra */
-        }
-
-    .gradient-blue {
-        background: linear-gradient(135deg,#3b82f6,#2563eb);
-    }
-
-    .gradient-green {
-        background: linear-gradient(135deg,#10b981,#059669);
-    }
-
-    .gradient-orange {
-        background: linear-gradient(135deg,#f59e0b,#d97706);
-    }
-
-    .gradient-red {
-        background: linear-gradient(135deg,#ef4444,#dc2626);
-    }
-
-    .icon {
-        font-size: 30px;
-        opacity: 0.8;
-    }
-</style>
-
-<div class="sidebar">
-
-    <h4>SIGEDAA</h4>
-
-    <a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-chart-line"></i> Dashboard</a>
-    <a asp-controller="Usuarios" asp-action="Index"><i class="fa fa-users"></i> Usuarios</a>
-    <a asp-controller="Atletas" asp-action="Index"><i class="fa fa-running"></i> Atletas</a>
-    <a asp-controller="Clubes" asp-action="Index"><i class="fa fa-people-group"></i> Clubes</a>
-    <a asp-controller="Entrenadores" asp-action="Index"><i class="fa fa-user-tie"></i> Entrenadores</a>
-    <a asp-controller="Competencias" asp-action="Index"><i class="fa fa-trophy"></i> Torneos</a>
-    <a asp-controller="Asociaciones" asp-action="Index"><i class="fa fa-building"></i> Asociaciones</a>
-    <a asp-controller="Disciplinas" asp-action="Index"><i class="fas fa-running"></i> Disciplinas</a>
-    <a asp-controller="Resultados" asp-action="Index"><i class="fas fa-medal"></i> Resultados</a>
-    <a asp-controller="Auth" asp-action="Logout"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
-
+<div class="page-header mb-4">
+    <div>
+        <span class="section-title">Centro de control</span>
+        <h1>Panel principal</h1>
+    </div>
+    <div class="dashboard-welcome">
+        <span class="dashboard-welcome-label">Sesion activa</span>
+        <strong>@Context.Session.GetString("usuario")</strong>
+        <span class="app-role-pill">@nombreRol</span>
+    </div>
 </div>
 
-<div class="content">
+<div class="dashboard-grid">
+    <aside class="dashboard-sidebar card">
+        <div class="card-body">
+            <div class="dashboard-sidebar-brand">
+                <div class="dashboard-sidebar-mark">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div>
+                    <h3>SIGEDAA</h3>
+                </div>
+            </div>
 
-    <div class="topbar">
-        <h5>Panel de Administración</h5>
-        <div>
-            Bienvenido, <b>@Context.Session.GetString("usuario")</b>
+            <nav class="dashboard-nav">
+                <a asp-controller="Dashboard" asp-action="Index" class="dashboard-nav-link active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                @if (puedeVerUsuarios)
+                {
+                    <a asp-controller="Usuarios" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                }
+                @if (puedeVerAtletas)
+                {
+                    <a asp-controller="Atletas" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-running"></i>
+                        <span>Atletas</span>
+                    </a>
+                }
+                @if (puedeVerClubes)
+                {
+                    <a asp-controller="Clubes" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-people-group"></i>
+                        <span>Clubes</span>
+                    </a>
+                }
+                @if (puedeVerEntrenadores)
+                {
+                    <a asp-controller="Entrenadores" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span>Entrenadores</span>
+                    </a>
+                }
+                @if (puedeVerCompetencias)
+                {
+                    <a asp-controller="Competencias" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-trophy"></i>
+                        <span>Competencias</span>
+                    </a>
+                }
+                @if (puedeVerAsociaciones)
+                {
+                    <a asp-controller="Asociaciones" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-building"></i>
+                        <span>Asociaciones</span>
+                    </a>
+                }
+                @if (puedeVerDisciplinas)
+                {
+                    <a asp-controller="Disciplinas" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-stopwatch"></i>
+                        <span>Disciplinas</span>
+                    </a>
+                }
+                @if (puedeVerResultados)
+                {
+                    <a asp-controller="Resultados" asp-action="Index" class="dashboard-nav-link">
+                        <i class="fa-solid fa-medal"></i>
+                        <span>Resultados</span>
+                    </a>
+                }
+            </nav>
+
+            <div class="dashboard-sidebar-footer">
+                <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger w-100">
+                    <i class="fa-solid fa-right-from-bracket me-2"></i>Cerrar sesion
+                </a>
+            </div>
         </div>
-    </div>
+    </aside>
 
-    <div class="row g-4">
+    <section class="dashboard-main">
+        <div class="dashboard-hero card">
+            <div class="card-body">
+                <div class="dashboard-hero-copy">
+                    <span class="section-title">Resumen</span>
+                    <h2>SIGEDAA</h2>
+                </div>
+                <div class="dashboard-hero-badge">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    <span>@nombreRol</span>
+                </div>
+            </div>
+        </div>
 
-        <div class="col-md-3">
-            <a asp-controller="Atletas" asp-action="Index" class="card-stat gradient-blue">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h3>@(ViewBag.AtletasCount ?? 0)</h3>
-                        <p class="mb-0">Atletas</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-running"></i>
+        <div class="row g-4 mt-1">
+            @if (puedeVerAtletas)
+            {
+                <div class="col-md-6 col-xl-3">
+                    <a asp-controller="Atletas" asp-action="Index" class="dashboard-stat dashboard-stat-blue">
+                        <div>
+                            <span class="dashboard-stat-label">Atletas</span>
+                            <strong>@(ViewBag.AtletasCount ?? 0)</strong>
+                        </div>
+                        <i class="fa-solid fa-running"></i>
+                    </a>
+                </div>
+            }
+
+            @if (puedeVerClubes)
+            {
+                <div class="col-md-6 col-xl-3">
+                    <a asp-controller="Clubes" asp-action="Index" class="dashboard-stat dashboard-stat-green">
+                        <div>
+                            <span class="dashboard-stat-label">Clubes</span>
+                            <strong>@(ViewBag.ClubesCount ?? 0)</strong>
+                        </div>
+                        <i class="fa-solid fa-people-group"></i>
+                    </a>
+                </div>
+            }
+
+            @if (puedeVerCompetencias)
+            {
+                <div class="col-md-6 col-xl-3">
+                    <a asp-controller="Competencias" asp-action="Index" class="dashboard-stat dashboard-stat-orange">
+                        <div>
+                            <span class="dashboard-stat-label">Competencias</span>
+                            <strong>@(ViewBag.TorneosCount ?? 0)</strong>
+                        </div>
+                        <i class="fa-solid fa-trophy"></i>
+                    </a>
+                </div>
+            }
+
+            @if (puedeVerResultados)
+            {
+                <div class="col-md-6 col-xl-3">
+                    <a asp-controller="Resultados" asp-action="Index" class="dashboard-stat dashboard-stat-red">
+                        <div>
+                            <span class="dashboard-stat-label">Resultados</span>
+                            <strong>@(ViewBag.ResultadosCount ?? 0)</strong>
+                        </div>
+                        <i class="fa-solid fa-medal"></i>
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-lg-8">
+                <div class="card dashboard-panel h-100">
+                    <div class="card-body">
+                        <span class="section-title">Modulos</span>
+                        <h3>Habilitados</h3>
+
+                        <div class="dashboard-chip-list">
+                            @if (puedeVerUsuarios)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-users"></i> Usuarios</span>
+                            }
+                            @if (puedeVerAtletas)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-running"></i> Atletas</span>
+                            }
+                            @if (puedeVerClubes)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-people-group"></i> Clubes</span>
+                            }
+                            @if (puedeVerEntrenadores)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-user-tie"></i> Entrenadores</span>
+                            }
+                            @if (puedeVerCompetencias)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-trophy"></i> Competencias</span>
+                            }
+                            @if (puedeVerAsociaciones)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-building"></i> Asociaciones</span>
+                            }
+                            @if (puedeVerDisciplinas)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-stopwatch"></i> Disciplinas</span>
+                            }
+                            @if (puedeVerResultados)
+                            {
+                                <span class="dashboard-chip"><i class="fa-solid fa-medal"></i> Resultados</span>
+                            }
+                        </div>
                     </div>
                 </div>
-            </a>
-        </div>
+            </div>
 
-        <div class="col-md-3">
-            <a asp-controller="Clubes" asp-action="Index" class="card-stat gradient-green">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h3>@(ViewBag.ClubesCount ?? 0)</h3>
-                        <p class="mb-0">Clubes</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-people-group"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
+            <div class="col-lg-4">
+                <div class="card dashboard-panel h-100">
+                    <div class="card-body">
+                        <span class="section-title">Indicadores</span>
+                        <h3>@nombreRol</h3>
+                        <div class="dashboard-kpi-grid">
+                            @if (esAdministrador)
+                            {
+                                <div class="dashboard-kpi-card">
+                                    <span>Usuarios activos</span>
+                                    <strong>@(ViewBag.UsuariosActivosCount ?? 0)</strong>
+                                </div>
+                                <div class="dashboard-kpi-card">
+                                    <span>Disciplinas</span>
+                                    <strong>@(ViewBag.DisciplinasCount ?? 0)</strong>
+                                </div>
+                            }
 
-        <div class="col-md-3">
-            <a asp-controller="Competencias" asp-action="Index" class="card-stat gradient-orange">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h3>@(ViewBag.TorneosCount ?? 0)</h3>
-                        <p class="mb-0">Torneos</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-trophy"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-md-3">
-            <a asp-controller="Resultados" asp-action="Index" class="card-stat gradient-red">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h3>@(ViewBag.ResultadosCount ?? 0)</h3>
-                        <p class="mb-0">Resultados</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-medal"></i>
+                            <div class="dashboard-kpi-card">
+                                <span>Atletas activos</span>
+                                <strong>@(ViewBag.AtletasActivosCount ?? 0)</strong>
+                            </div>
+                            <div class="dashboard-kpi-card">
+                                <span>Clubes activos</span>
+                                <strong>@(ViewBag.ClubesActivosCount ?? 0)</strong>
+                            </div>
+                            <div class="dashboard-kpi-card">
+                                <span>Competencias abiertas</span>
+                                <strong>@(ViewBag.TorneosActivosCount ?? 0)</strong>
+                            </div>
+                            <div class="dashboard-kpi-card">
+                                <span>Asociaciones activas</span>
+                                <strong>@(ViewBag.AsociacionesActivasCount ?? 0)</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-
-    </div>
-
-    <div class="mt-5">
-        <div class="card p-4 shadow-sm border-0" style="border-radius: 15px;">
-            <h4 class="fw-bold">Bienvenido al sistema SIGEDAA</h4>
-            <p class="text-muted mb-0">
-                Desde este panel puedes administrar atletas, clubes,
-                torneos, entrenadores y resultados del sistema de gestión de atletismo.
-            </p>
-        </div>
-    </div>
-
+    </section>
 </div>

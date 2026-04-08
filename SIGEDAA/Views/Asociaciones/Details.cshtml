@@ -3,12 +3,16 @@
 @{
     ViewData["Title"] = "Detalles de la Asociación";
     var clubes = ViewBag.Clubes as List<SIGEDAA.Models.Club>;
+    var puedeGestionarAsociaciones = User.IsInRole("Administrador") || User.IsInRole("Presidente");
 }
 
 <div class="d-flex justify-content-between mb-3">
     <h2>Asociación: <span class="text-primary">@Model.NombreAsociacion</span></h2>
     <div>
-        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdAsociacion">Editar Asociación</a>
+        @if (puedeGestionarAsociaciones)
+        {
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdAsociacion">Editar Asociación</a>
+        }
         <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
     </div>
 </div>

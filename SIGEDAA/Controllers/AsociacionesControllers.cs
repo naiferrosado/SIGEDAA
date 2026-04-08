@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SIGEDAA.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador,Presidente,Juez")]
     public class AsociacionesController : Controller
     {
         private readonly AppDbContext _context;
@@ -25,12 +25,14 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Asociaciones/Create
+        [Authorize(Roles = "Administrador,Presidente")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: /Asociaciones/Create
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AsociacionProvincial asociacion)
@@ -46,6 +48,7 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Asociaciones/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -57,6 +60,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Asociaciones/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AsociacionProvincial asociacion)
@@ -84,6 +88,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Asociaciones/Delete
+        [Authorize(Roles = "Administrador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -97,6 +102,7 @@ namespace SIGEDAA.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int id)

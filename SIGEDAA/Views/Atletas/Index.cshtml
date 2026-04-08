@@ -2,26 +2,27 @@
 
 @{
     ViewData["Title"] = "Atletas";
+    var puedeGestionarAtletas = User.IsInRole("Administrador") || User.IsInRole("Presidente");
+    var esAdministrador = User.IsInRole("Administrador");
 }
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>Atletas</h2>
+<div class="page-header">
     <div>
-        <a class="btn btn-primary" asp-action="Create">Nuevo atleta</a>
+        <h1>Atletas</h1>
+        <p>Consulta, filtra y administra el registro oficial de atletas del sistema.</p>
+    </div>
+    <div class="page-actions">
+        @if (puedeGestionarAtletas)
+        {
+            <a class="btn btn-primary" asp-action="Create">Nuevo atleta</a>
+        }
+        <a class="btn btn-secondary" asp-action="ExportarCsv">Exportar CSV</a>
         <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Volver a la Pantalla Principal</a>
     </div>
 </div>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
 @if (Model == null || !Model.Any())
 {
@@ -57,18 +58,24 @@ else
                     <td>@a.TipoSangre</td>
                     <td>
                         <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@a.IdAtleta">Ver</a>
-                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@a.IdAtleta">Editar</a>
-                        <form asp-action="CambiarEstado" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@a.IdAtleta" />
-                            @if (a.EstadoActivo)
-                            {
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar a este atleta?');">Inhabilitar</button>
-                            }
-                            else
-                            {
-                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar a este atleta?');">Habilitar</button>
-                            }
-                        </form>
+                        @if (puedeGestionarAtletas)
+                        {
+                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@a.IdAtleta">Editar</a>
+                        }
+                        @if (esAdministrador)
+                        {
+                            <form asp-action="CambiarEstado" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@a.IdAtleta" />
+                                @if (a.EstadoActivo)
+                                {
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar a este atleta?');">Inhabilitar</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar a este atleta?');">Habilitar</button>
+                                }
+                            </form>
+                        }
                     </td>
                 </tr>
             }
