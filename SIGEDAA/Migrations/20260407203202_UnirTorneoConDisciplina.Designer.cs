@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEDAA.Data;
 
@@ -11,9 +12,11 @@ using SIGEDAA.Data;
 namespace SIGEDAA.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407203202_UnirTorneoConDisciplina")]
+    partial class UnirTorneoConDisciplina
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,6 +225,29 @@ namespace SIGEDAA.Migrations
                     b.ToTable("CompetenciasClubes", (string)null);
                 });
 
+            modelBuilder.Entity("SIGEDAA.Models.CompetenciaDisciplina", b =>
+                {
+                    b.Property<int>("IdCompetenciaDisciplina")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCompetenciaDisciplina"));
+
+                    b.Property<int>("IdCompetencia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdDisciplina")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdCompetenciaDisciplina");
+
+                    b.HasIndex("IdCompetencia");
+
+                    b.HasIndex("IdDisciplina");
+
+                    b.ToTable("CompetenciasDisciplinas", (string)null);
+                });
+
             modelBuilder.Entity("SIGEDAA.Models.Disciplina", b =>
                 {
                     b.Property<int>("IdDisciplina")
@@ -260,217 +286,6 @@ namespace SIGEDAA.Migrations
                     b.HasKey("IdDisciplina");
 
                     b.ToTable("Disciplinas", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            IdDisciplina = 1,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Velocidad pura en línea recta.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "100 Metros Planos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 2,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Velocidad en curva y recta.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "200 Metros Planos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 3,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Velocidad sostenida (una vuelta a la pista).",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "400 Metros Planos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 4,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Medio fondo (dos vueltas a la pista).",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "800 Metros Planos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 5,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Medio fondo.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "1500 Metros Planos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 6,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Carrera de velocidad con 10 vallas.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Masculino",
-                            NombreDisciplina = "110 Metros Vallas",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 7,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Carrera de velocidad con 10 vallas.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Femenino",
-                            NombreDisciplina = "100 Metros Vallas",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 8,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Una vuelta con vallas.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "400 Metros Vallas",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 9,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Fondo con salto de rías y vallas.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "3000 Metros Obstáculos",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 10,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Cuatro atletas corriendo 100m cada uno.",
-                            EsRelevo = true,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Relevo 4x100 Metros",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 11,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Cuatro atletas corriendo 400m cada uno.",
-                            EsRelevo = true,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Relevo 4x400 Metros",
-                            Tipo = "Pista",
-                            TipoMedicion = "Tiempo"
-                        },
-                        new
-                        {
-                            IdDisciplina = 12,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Salto horizontal tras carrera.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Salto de Longitud",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 13,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Salto horizontal en tres fases.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Salto Triple",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 14,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Salto vertical sobre listón.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Salto de Altura",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 15,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Salto vertical apoyado en una pértiga.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Salto con Pértiga",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 16,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Empuje de un peso esférico.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Lanzamiento de Bala",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 17,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Lanzamiento de objeto circular pesado.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Lanzamiento de Disco",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 18,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Lanzamiento de bola metálica con cable.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Lanzamiento de Martillo",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        },
-                        new
-                        {
-                            IdDisciplina = 19,
-                            CategoriaRecomendada = "Libre",
-                            DescripcionReglas = "Lanzamiento de lanza atlética.",
-                            EsRelevo = false,
-                            GeneroPermitido = "Mixto",
-                            NombreDisciplina = "Lanzamiento de Jabalina",
-                            Tipo = "Campo",
-                            TipoMedicion = "Distancia"
-                        });
                 });
 
             modelBuilder.Entity("SIGEDAA.Models.Entrenador", b =>
@@ -688,6 +503,25 @@ namespace SIGEDAA.Migrations
                     b.Navigation("Competencia");
                 });
 
+            modelBuilder.Entity("SIGEDAA.Models.CompetenciaDisciplina", b =>
+                {
+                    b.HasOne("SIGEDAA.Models.Competencia", "Competencia")
+                        .WithMany("DisciplinasDisputadas")
+                        .HasForeignKey("IdCompetencia")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SIGEDAA.Models.Disciplina", "Disciplina")
+                        .WithMany()
+                        .HasForeignKey("IdDisciplina")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Competencia");
+
+                    b.Navigation("Disciplina");
+                });
+
             modelBuilder.Entity("SIGEDAA.Models.Entrenador", b =>
                 {
                     b.HasOne("SIGEDAA.Models.Club", "Club")
@@ -740,6 +574,8 @@ namespace SIGEDAA.Migrations
             modelBuilder.Entity("SIGEDAA.Models.Competencia", b =>
                 {
                     b.Navigation("ClubesInscritos");
+
+                    b.Navigation("DisciplinasDisputadas");
                 });
 #pragma warning restore 612, 618
         }

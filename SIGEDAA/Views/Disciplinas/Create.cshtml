@@ -5,15 +5,13 @@
 }
 
 <div class="container mt-4">
-    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 600px;">
-
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 700px;">
         <div class="card-header bg-primary text-white rounded-top-4 p-3">
             <h4 class="mb-0 fw-bold"><i class="fas fa-running me-2"></i> Crear Disciplina</h4>
         </div>
 
         <div class="card-body p-4">
             <form asp-action="Create" method="post">
-
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger fw-bold" role="alert"></div>
 
                 <div class="mb-4">
@@ -22,25 +20,48 @@
                     <span asp-validation-for="NombreDisciplina" class="text-danger small"></span>
                 </div>
 
-                <div class="mb-4">
-                    <label asp-for="Tipo" class="form-label fw-bold">Tipo (Pista, Campo, etc.)</label>
-                    <input asp-for="Tipo" class="form-control shadow-sm" placeholder="Ej. Pista" required />
-                    <span asp-validation-for="Tipo" class="text-danger small"></span>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Tipo" class="form-label fw-bold">Tipo</label>
+                        <select asp-for="Tipo" class="form-select shadow-sm" required>
+                            <option value="">-- Seleccione --</option>
+                            <option value="Pista">Pista</option>
+                            <option value="Campo">Campo</option>
+                            <option value="Ruta">Ruta</option>
+                            <option value="Combinada">Combinada</option>
+                        </select>
+                        <span asp-validation-for="Tipo" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="TipoMedicion" class="form-label fw-bold">Tipo de Medición</label>
+                        <select asp-for="TipoMedicion" class="form-select shadow-sm" required>
+                            <option value="Tiempo">Tiempo (Cronómetro)</option>
+                            <option value="Distancia">Distancia (Metros/Centímetros)</option>
+                        </select>
+                        <span asp-validation-for="TipoMedicion" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="GeneroPermitido" class="form-label fw-bold">Género Permitido</label>
+                        <select asp-for="GeneroPermitido" class="form-select shadow-sm" required>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Mixto">Mixto</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CategoriaRecomendada" class="form-label fw-bold">Categoría Recomendada</label>
+                        <input asp-for="CategoriaRecomendada" class="form-control shadow-sm" placeholder="Ej. Libre, Sub-20, etc." />
+                    </div>
                 </div>
 
                 <div class="mb-4">
-                    <label asp-for="TipoMedicion" class="form-label fw-bold">Tipo de Medición</label>
-                    <select asp-for="TipoMedicion" class="form-select shadow-sm">
-                        <option value="Tiempo">Tiempo (Cronómetro)</option>
-                        <option value="Distancia">Distancia (Metros/Centímetros)</option>
-                    </select>
-                    <span asp-validation-for="TipoMedicion" class="text-danger small"></span>
-                </div>
-
-                <div class="mb-4">
-                    <label asp-for="CategoriaRecomendada" class="form-label fw-bold">Categoría Recomendada</label>
-                    <input asp-for="CategoriaRecomendada" class="form-control shadow-sm" placeholder="Ej. Libre, Sub-20, etc." />
-                    <span asp-validation-for="CategoriaRecomendada" class="text-danger small"></span>
+                    <div class="form-check form-switch fs-5">
+                        <input asp-for="EsRelevo" class="form-check-input border-primary" type="checkbox" role="switch">
+                        <label asp-for="EsRelevo" class="form-check-label ms-2 fw-bold text-secondary">¿Es prueba de Relevos?</label>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-end gap-2 mt-4">
@@ -51,7 +72,6 @@
                         <i class="fas fa-save me-1"></i> Guardar Disciplina
                     </button>
                 </div>
-
             </form>
         </div>
     </div>

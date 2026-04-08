@@ -1,57 +1,181 @@
 ﻿@model IEnumerable<SIGEDAA.Models.ResultadoCompetencia>
 
 @{
-    ViewData["Title"] = "Resultados";
+    ViewData["Title"] = "Resultados Deportivos";
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>Registro de Resultados</h2>
-    <div>
-        <a class="btn btn-primary" asp-action="Create">Registrar Resultado</a>
-        <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Volver al Dashboard</a>
+<style>
+    .card-custom {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-gradient {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .btn-primary-custom {
+        background-color: #2a5298;
+        border-color: #2a5298;
+        border-radius: 8px;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #1e3c72;
+            border-color: #1e3c72;
+        }
+
+    .badge-oro {
+        background: linear-gradient(45deg, #FFDF00, #D4AF37);
+        color: #000;
+        font-weight: bold;
+    }
+
+    .badge-plata {
+        background: linear-gradient(45deg, #E0E0E0, #9E9E9E);
+        color: #000;
+        font-weight: bold;
+    }
+
+    .badge-bronce {
+        background: linear-gradient(45deg, #CD7F32, #8B4513);
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8faff;
+        transition: 0.3s;
+    }
+
+    .marca-highlight {
+        font-size: 1.1rem;
+        color: #198754;
+        font-weight: 800;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h2 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Panel de Resultados</h2>
+    <div class="d-flex gap-2">
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-light shadow-sm border" style="border-radius: 8px;">Volver al Dashboard</a>
+        <a asp-action="Create" class="btn btn-primary-custom shadow-sm text-white">+ Registrar Nueva Marca</a>
     </div>
 </div>
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success">@TempData["Success"]</div>
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 10px;">
+        <strong>¡Éxito!</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
-<div class="card p-3 shadow-sm">
-    <table id="tablaResultados" class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Torneo</th>
-                <th>Disciplina</th>
-                <th>Atleta</th>
-                <th>Marca</th>
-                <th>Posición</th>
-                <th>Puntos</th>
-                <th>¿Récord?</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Competencia?.NombreEvento</td>
-                    <td><span class="badge bg-info text-dark">@item.Disciplina?.NombreDisciplina</span></td>
-                    <td class="fw-bold">@item.Atleta?.Nombres @item.Atleta?.Apellidos</td>
-                    <td class="text-success fw-bold">@item.MarcaObtenida</td>
-                    <td>@(item.PosicionFinal)° Lugar</td>
-                    <td>@item.PuntosOtorgados</td>
-                    <td>
-                        @if (item.EsRecordNacional)
+<div class="card card-custom mb-4">
+    <div class="card-body bg-light" style="border-radius: 15px;">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <label class="fw-bold mb-0 text-secondary"><i class="fas fa-filter me-2"></i>Filtrar por Torneo:</label>
+            <select id="filtroTorneo" class="form-select w-auto shadow-sm border-0" style="border-radius: 8px; min-width: 250px;">
+                <option value="">-- Mostrar Todos los Torneos --</option>
+                @if (Model != null && Model.Any())
+                {
+                    var torneosUnicos = Model.Select(m => m.Competencia?.NombreEvento).Where(n => !string.IsNullOrEmpty(n)).Distinct().OrderBy(n => n);
+                    foreach (var torneo in torneosUnicos)
+                    {
+                        <option value="@torneo">@torneo</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="card card-custom">
+    <div class="card-header header-gradient py-3">
+        <h5 class="mb-0 fw-bold">Clasificación General</h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table id="tablaResultados" class="table table-hover align-middle border-bottom">
+                <thead class="table-light text-secondary">
+                    <tr>
+                        <th class="border-0">Torneo</th>
+                        <th class="border-0">Disciplina</th>
+                        <th class="border-0">Atleta</th>
+                        <th class="border-0">Club</th>
+                        <th class="border-0">Marca</th>
+                        <th class="border-0">Posición</th>
+                        <th class="border-0 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
                         {
-                            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Sí</span>
+                            <tr>
+                                <td class="fw-semibold text-dark">@(item.Competencia?.NombreEvento ?? "N/A")</td>
+                                <td><span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-2 rounded-pill">@(item.Disciplina?.NombreDisciplina ?? "N/A")</span></td>
+                                <td><span class="fw-bold text-dark">@(item.Atleta?.Nombres) @(item.Atleta?.Apellidos)</span></td>
+                                <td class="text-muted">@(item.Club?.NombreClub ?? "N/A")</td>
+
+                                <td class="marca-highlight">@item.MarcaObtenida</td>
+
+                                <td>
+                                    @if (item.PosicionFinal == 1)
+                                    {
+                                        <span class="badge badge-oro px-3 py-2 shadow-sm rounded-pill">🏆 1° Lugar</span>
+                                    }
+                                    else if (item.PosicionFinal == 2)
+                                    {
+                                        <span class="badge badge-plata px-3 py-2 shadow-sm rounded-pill">🥈 2° Lugar</span>
+                                    }
+                                    else if (item.PosicionFinal == 3)
+                                    {
+                                        <span class="badge badge-bronce px-3 py-2 shadow-sm rounded-pill">🥉 3° Lugar</span>
+                                    }
+                                    else if (item.PosicionFinal > 3)
+                                    {
+                                        <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill shadow-sm">@item.PosicionFinal° Lugar</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Procesando...</span>
+                                    }
+                                </td>
+
+                                <td class="text-center text-nowrap">
+                                    <a asp-action="Edit" asp-route-id="@item.IdResultado" class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-bold me-1">
+                                        Editar
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.IdResultado" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" onclick="return confirm('¿Eliminar esta marca permanentemente?');">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <div class="fs-1 mb-2">🏅</div>
+                                <h5 class="fw-bold">Sin resultados</h5>
+                                <p class="mb-0">Aún no hay resultados registrados.</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -60,8 +184,21 @@
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#tablaResultados').DataTable({
-                "language": { "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json" }
+            var table = $('#tablaResultados').DataTable({
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json" },
+                "order": [[0, "asc"], [1, "asc"], [5, "asc"]],
+                "dom": '<"row align-items-center mb-3"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row align-items-center mt-3"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>'
+            });
+
+            $('#filtroTorneo').on('change', function () {
+                var valorTorneo = $(this).val();
+                if (valorTorneo) {
+                    // Limpia caracteres especiales para la búsqueda regex en DataTables
+                    var regexTorneo = '^' + $.fn.dataTable.util.escapeRegex(valorTorneo) + '$';
+                    table.column(0).search(regexTorneo, true, false).draw();
+                } else {
+                    table.column(0).search('').draw();
+                }
             });
         });
     </script>

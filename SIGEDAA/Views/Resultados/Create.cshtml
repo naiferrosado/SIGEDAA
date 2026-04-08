@@ -1,74 +1,112 @@
 ﻿@model SIGEDAA.Models.ResultadoCompetencia
 
-<form asp-action="Create" method="post">
-    <input type="hidden" asp-for="IdClub" id="hiddenClubId" />
+@{
+    ViewData["Title"] = "Registrar Resultado";
+}
 
-    <div class="row">
-        <div class="col-md-12 mb-3">
-            <label class="form-label fw-bold">Torneo</label>
-            <select asp-for="IdCompetencia" id="IdCompetencia" class="form-select" asp-items="ViewBag.Competencias" required>
-                <option value="">-- Seleccione --</option>
-            </select>
-        </div>
-
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Atleta</label>
-            <select asp-for="IdAtleta" id="IdAtleta" class="form-select" required disabled>
-                <option value="">-- Primero elija el Torneo --</option>
-            </select>
-        </div>
-
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Club (Se asigna solo)</label>
-            <input type="text" id="txtClubNombre" class="form-control bg-light" readonly placeholder="Club del atleta" />
-        </div>
-
-        <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Disciplina</label>
-            <select asp-for="IdDisciplina" class="form-select" asp-items="ViewBag.Disciplinas" required></select>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label class="form-label fw-bold">Marca</label>
-            <input asp-for="MarcaObtenida" class="form-control" required />
-        </div>
-        <div class="col-md-3 mb-3">
-            <label class="form-label fw-bold">Posición</label>
-            <input asp-for="PosicionFinal" class="form-control" type="number" required />
-        </div>
+<div class="card shadow-sm mx-auto" style="max-width: 800px;">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-stopwatch"></i> Registrar Nueva Marca</h4>
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Guardar Resultado</button>
-</form>
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post">
+            <input type="hidden" asp-for="IdClub" id="hiddenClubId" />
+
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <label class="form-label fw-bold">Torneo / Competencia</label>
+                    <select asp-for="IdCompetencia" id="IdCompetencia" class="form-select border-primary" asp-items="ViewBag.Competencias" required>
+                        <option value="">-- Seleccione el Torneo --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Atleta</label>
+                    <select asp-for="IdAtleta" id="IdAtleta" class="form-select" asp-items="ViewBag.Atletas" required disabled>
+                        <option value="">-- Primero elija el Torneo --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-muted">Club (Asignación Automática)</label>
+                    <input type="text" id="txtClubNombre" class="form-control bg-light text-muted" readonly placeholder="Detectando club..." />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Disciplina</label>
+                    <select asp-for="IdDisciplina" id="IdDisciplina" class="form-select" asp-items="ViewBag.Disciplinas" required disabled>
+                        <option value="">-- Primero elija el Torneo --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold">Marca Obtenida</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-success text-white"><i class="fas fa-flag-checkered"></i></span>
+                        <input asp-for="MarcaObtenida" class="form-control border-success" placeholder="Ej. 10.5 o 8.45" required />
+                    </div>
+                    <small class="text-muted">La posición se calculará automáticamente al guardar.</small>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-2">
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save"></i> Guardar Resultado</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @section Scripts {
     <script>
         var listaAtletasGlobal = [];
 
+        // Cuando cambia el Torneo
         $("#IdCompetencia").change(function () {
             var id = $(this).val();
-            var select = $("#IdAtleta");
-            select.empty().prop("disabled", true);
+            var selectAtleta = $("#IdAtleta");
+            var selectDisciplina = $("#IdDisciplina");
+
+            // 1. Limpiamos y deshabilitamos
+            selectAtleta.empty().prop("disabled", true);
+            selectDisciplina.empty().prop("disabled", true);
             $("#txtClubNombre").val("");
             $("#hiddenClubId").val("");
 
             if (id) {
+                // 2. Traer Atletas por AJAX
                 $.getJSON('/Resultados/ObtenerAtletasPorTorneo', { idCompetencia: id }, function (data) {
-                    listaAtletasGlobal = data; // Guardamos la info completa
-                    select.prop("disabled", false).append('<option value="">-- Seleccione Atleta --</option>');
+                    listaAtletasGlobal = data;
+                    selectAtleta.prop("disabled", false).append('<option value="">-- Seleccione Atleta --</option>');
                     $.each(data, function (i, item) {
-                        select.append('<option value="' + item.valor + '">' + item.texto + '</option>');
+                        selectAtleta.append('<option value="' + item.valor + '">' + item.texto + '</option>');
                     });
                 });
+
+                // 3. Traer Disciplinas por AJAX
+                $.getJSON('/Resultados/ObtenerDisciplinasPorTorneo', { idCompetencia: id }, function (data) {
+                    selectDisciplina.prop("disabled", false).append('<option value="">-- Seleccione Disciplina --</option>');
+                    $.each(data, function (i, item) {
+                        selectDisciplina.append('<option value="' + item.valor + '">' + item.texto + '</option>');
+                    });
+                });
+            } else {
+                selectAtleta.append('<option value="">-- Primero elija el Torneo --</option>');
+                selectDisciplina.append('<option value="">-- Primero elija el Torneo --</option>');
             }
         });
 
-        // Cuando eligen al atleta, buscamos su club en la lista que ya bajamos
+        // Cuando cambia el Atleta, llenamos su Club
         $("#IdAtleta").change(function () {
             var idSelected = $(this).val();
             var atletaInfo = listaAtletasGlobal.find(a => a.valor == idSelected);
 
             if (atletaInfo) {
                 $("#txtClubNombre").val(atletaInfo.clubNombre);
-                $("#hiddenClubId").val(atletaInfo.clubId);
+                $("#hiddenClubId").val(atletaInfo.clubId); // Guardamos el ID real para el controlador
+            } else {
+                $("#txtClubNombre").val("");
+                $("#hiddenClubId").val("");
             }
         });
     </script>
