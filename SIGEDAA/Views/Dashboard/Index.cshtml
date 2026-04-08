@@ -6,14 +6,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-
     body {
         background: #f1f5f9;
         font-family: Segoe UI;
     }
 
     /* SIDEBAR */
-
     .sidebar {
         position: fixed;
         width: 250px;
@@ -43,15 +41,13 @@
             }
 
     /* CONTENT */
-
     .content {
         margin-left: 250px;
         padding: 30px;
-        <style>
-        /* TOPBAR */
-        .topbar
+    }
 
-    {
+    /* TOPBAR */
+    .topbar {
         background: white;
         padding: 15px 25px;
         border-radius: 10px;
@@ -62,7 +58,6 @@
     }
 
     /* CARDS */
-
     .card-stat {
         border: none;
         border-radius: 15px;
@@ -93,145 +88,100 @@
     }
 </style>
 
-<!-- SIDEBAR -->
-
 <div class="sidebar">
 
     <h4>SIGEDAA</h4>
 
-    <a href="#"><i class="fa fa-chart-line"></i> Dashboard</a>
-    <a href="#"><i class="fa fa-users"></i> Usuarios</a>
-    <a href="/Atletas"><i class="fa fa-running"></i> Atletas</a>
-    <a href="/Clubes"><i class="fa fa-people-group"></i> Clubes</a>
-    <a href="/Entrenadores"><i class="fa fa-user-tie"></i> Entrenadores</a>
-    <a href="/Competencias"><i class="fa fa-trophy"></i> Torneos</a>
-    <a href="/Asociaciones"><i class="fa fa-building"></i> Asociaciones</a>
-
-    <a asp-controller="Disciplinas" asp-action="Index" class="nav-link">
-        <i class="fas fa-running"></i> Disciplinas
-    </a>
-
-    <a asp-controller="Resultados" asp-action="Index" class="nav-link">
-        <i class="fas fa-medal"></i> Resultados
-    </a>
-
-    <a href="/Auth/Logout"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
+    <a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-chart-line"></i> Dashboard</a>
+    <a asp-controller="Usuarios" asp-action="Index"><i class="fa fa-users"></i> Usuarios</a>
+    <a asp-controller="Atletas" asp-action="Index"><i class="fa fa-running"></i> Atletas</a>
+    <a asp-controller="Clubes" asp-action="Index"><i class="fa fa-people-group"></i> Clubes</a>
+    <a asp-controller="Entrenadores" asp-action="Index"><i class="fa fa-user-tie"></i> Entrenadores</a>
+    <a asp-controller="Competencias" asp-action="Index"><i class="fa fa-trophy"></i> Torneos</a>
+    <a asp-controller="Asociaciones" asp-action="Index"><i class="fa fa-building"></i> Asociaciones</a>
+    <a asp-controller="Disciplinas" asp-action="Index"><i class="fas fa-running"></i> Disciplinas</a>
+    <a asp-controller="Resultados" asp-action="Index"><i class="fas fa-medal"></i> Resultados</a>
+    <a asp-controller="Auth" asp-action="Logout"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a>
 
 </div>
 
-<!-- CONTENT -->
-
 <div class="content">
 
-    <!-- TOPBAR -->
-
     <div class="topbar">
-
         <h5>Panel de Administración</h5>
-
         <div>
             Bienvenido, <b>@Context.Session.GetString("usuario")</b>
         </div>
-
     </div>
-
-    <!-- STATS -->
 
     <div class="row g-4">
 
         <div class="col-md-3">
             <div class="card-stat gradient-blue">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
                         <h3>@(ViewBag.AtletasCount ?? 0)</h3>
                         <p>Atletas</p>
                     </div>
-
                     <div class="icon">
                         <i class="fa fa-running"></i>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card-stat gradient-green">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
                         <h3>@(ViewBag.EquiposCount ?? 0)</h3>
                         <p>Equipos</p>
                     </div>
-
                     <div class="icon">
                         <i class="fa fa-people-group"></i>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card-stat gradient-orange">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
                         <h3>@(ViewBag.TorneosCount ?? 0)</h3>
                         <p>Torneos</p>
                     </div>
-
                     <div class="icon">
                         <i class="fa fa-trophy"></i>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card-stat gradient-red">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
                         <h3>@(ViewBag.ResultadosCount ?? 0)</h3>
                         <p>Resultados</p>
                     </div>
-
                     <div class="icon">
                         <i class="fa fa-medal"></i>
                     </div>
-
                 </div>
-
             </div>
         </div>
 
     </div>
 
-    <!-- MENSAJE -->
-
     <div class="mt-5">
-
         <div class="card p-4 shadow-sm">
-
             <h4>Bienvenido al sistema SIGEDAA</h4>
-
             <p>
                 Desde este panel puedes administrar atletas, equipos,
                 torneos, entrenadores y resultados del sistema de gestión de atletismo.
             </p>
-
         </div>
-
     </div>
 
 </div>

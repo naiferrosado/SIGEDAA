@@ -1,0 +1,65 @@
+﻿@model SIGEDAA.Models.Usuario
+
+@{
+    ViewData["Title"] = "Nuevo Usuario";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 600px;">
+
+        <div class="card-header bg-primary text-white rounded-top-4 p-3">
+            <h4 class="mb-0 fw-bold"><i class="fas fa-user-plus me-2"></i> Crear Usuario</h4>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger fw-bold" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NombreCompleto" class="form-label fw-bold">Nombre Completo</label>
+                    <input asp-for="NombreCompleto" class="form-control shadow-sm border-primary" required />
+                    <span asp-validation-for="NombreCompleto" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CorreoElectronico" class="form-label fw-bold">Correo Electrónico</label>
+                    <input asp-for="CorreoElectronico" type="email" class="form-control shadow-sm" placeholder="ejemplo@correo.com" required />
+                    <span asp-validation-for="CorreoElectronico" class="text-danger small"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="ClaveAcceso" class="form-label fw-bold">Contraseña</label>
+                        <input asp-for="ClaveAcceso" type="password" class="form-control shadow-sm" required />
+                        <span asp-validation-for="ClaveAcceso" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label asp-for="Rol" class="form-label fw-bold">Rol en el Sistema</label>
+                        <select asp-for="Rol" class="form-select shadow-sm">
+                            <option value="Administrador">Administrador</option>
+                            <option value="Juez">Juez</option>
+                            <option value="Presidente">Presidente</option>
+                        </select>
+                        <span asp-validation-for="Rol" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-2">
+                    <a asp-action="Index" class="btn btn-secondary shadow-sm">Cancelar</a>
+                    <button type="submit" class="btn btn-primary shadow-sm fw-bold">
+                        <i class="fas fa-save me-1"></i> Guardar Usuario
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
