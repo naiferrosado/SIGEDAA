@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SIGEDAA.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public class DisciplinasController : Controller
     {
         // SIN private readonly

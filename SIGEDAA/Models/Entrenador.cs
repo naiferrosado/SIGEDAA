@@ -13,11 +13,11 @@ namespace SIGEDAA.Models
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
         [StringLength(100)]
-        public string Nombres { get; set; }
+        public string Nombres { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El apellido es obligatorio")]
         [StringLength(100)]
-        public string Apellidos { get; set; }
+        public string Apellidos { get; set; } = string.Empty;
 
         [StringLength(100)]
         public string? Especialidad { get; set; }
@@ -33,8 +33,6 @@ namespace SIGEDAA.Models
 
         public bool EstadoActivo { get; set; } = true;
 
-       
-        [ForeignKey("IdClub")]
         public virtual Club? Club { get; set; }
 
     }

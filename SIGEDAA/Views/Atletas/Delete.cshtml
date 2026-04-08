@@ -4,12 +4,22 @@
     ViewData["Title"] = "Eliminar Atleta";
 }
 
-<h2>Eliminar Atleta</h2>
+<div class="page-header">
+    <div>
+        <h1>Eliminar atleta</h1>
+        <p>Revisa la informacion antes de confirmar la eliminacion permanente del registro.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
 
-<div class="card p-3">
-    <p class="text-danger">¿Seguro que desea eliminar el atleta <strong>@Model.Nombres @Model.Apellidos</strong>?</p>
+<div class="card p-4 border-danger">
+    <div class="alert alert-danger mb-4">
+        Estas a punto de eliminar al atleta <strong>@Model.Nombres @Model.Apellidos</strong>. Esta accion no se puede deshacer.
+    </div>
 
-    <dl class="row">
+    <dl class="row description-list">
         <dt class="col-sm-3">Id</dt>
         <dd class="col-sm-9">@Model.IdAtleta</dd>
         <dt class="col-sm-3">Fecha Nacimiento</dt>
@@ -21,7 +31,9 @@
     <form asp-action="Delete" method="post">
         <input type="hidden" name="id" value="@Model.IdAtleta" />
         @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-danger">Eliminar</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        <div class="page-actions">
+            <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 </div>

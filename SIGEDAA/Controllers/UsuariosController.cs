@@ -1,131 +1,161 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SIGEDAA.Data;
 using SIGEDAA.Models;
-using System;
-using System.Threading.Tasks;
+using SIGEDAA.Services;
 
-namespace SIGEDAA.Controllers
+namespace SIGEDAA.Controllers;
+
+[Authorize(Roles = "Administrador")]
+public class UsuariosController : Controller
 {
-    // Solo los usuarios con rol "Administrador" pueden entrar a este módulo
-    [Authorize(Roles = "Administrador")]
-    public class UsuariosController : Controller
+    private readonly AppDbContext _context;
+    private readonly IPasswordService _passwordService;
+    private readonly IAuditTrailService _auditTrailService;
+
+    public UsuariosController(
+        AppDbContext context,
+        IPasswordService passwordService,
+        IAuditTrailService auditTrailService)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+        _passwordService = passwordService;
+        _auditTrailService = auditTrailService;
+    }
 
-        public UsuariosController(AppDbContext context)
+    public async Task<IActionResult> Index()
+    {
+        return View(await _context.Usuarios.OrderBy(u => u.NombreCompleto).ToListAsync());
+    }
+
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id is null)
         {
-            _context = context;
+            return NotFound();
         }
 
-
-        // INDEX (Lista de Usuarios)
-
-        public async Task<IActionResult> Index()
+        Usuario? usuario = await _context.Usuarios.FirstOrDefaultAsync(m => m.IdUsuario == id);
+        if (usuario is null)
         {
-            return View(await _context.Usuarios.ToListAsync());
+            return NotFound();
         }
 
+        return View(usuario);
+    }
 
-        // DETAILS (Ver Perfil de Usuario)
+    public IActionResult Create()
+    {
+        return View(new Usuario { EstadoActivo = true });
+    }
 
-        public async Task<IActionResult> Details(int? id)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Usuario usuario)
+    {
+        if (ModelState.IsValid)
         {
-            if (id == null) return NotFound();
-
-            var usuario = await _context.Usuarios
-                .FirstOrDefaultAsync(m => m.IdUsuario == id);
-
-            if (usuario == null) return NotFound();
-
-            return View(usuario);
-        }
-
-
-        // CREATE (Crear Nuevo Usuario)
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Usuario usuario)
-        {
-            if (ModelState.IsValid)
+            try
             {
-                try
+                bool existeCorreo = await _context.Usuarios.AnyAsync(u => u.CorreoElectronico == usuario.CorreoElectronico);
+                if (existeCorreo)
                 {
-                    // 1. Validar que el correo no exista ya en la base de datos
-                    var existeCorreo = await _context.Usuarios.AnyAsync(u => u.CorreoElectronico == usuario.CorreoElectronico);
-                    if (existeCorreo)
-                    {
-                        ModelState.AddModelError("CorreoElectronico", "Este correo ya está registrado en el sistema.");
-                        return View(usuario);
-                    }
-
-                    // 2. Automatizar campos internos
-                    usuario.FechaRegistro = DateTime.Now; // Toma la fecha y hora actual
-                    usuario.EstadoActivo = true; // Todo usuario nuevo nace activo
-
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
-
-                    TempData["Success"] = "¡Usuario registrado correctamente!";
-                    return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("CorreoElectronico", "Este correo ya esta registrado en el sistema.");
+                    return View(usuario);
                 }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Error al guardar: " + ex.Message);
-                }
+
+                usuario.FechaRegistro = DateTime.Now;
+                usuario.ClaveAcceso = _passwordService.HashPassword(usuario, usuario.ClaveAcceso);
+
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+                await _auditTrailService.RecordAsync(
+                    "UsuarioCreado",
+                    $"Se creo el usuario {usuario.CorreoElectronico} con rol {usuario.Rol}.",
+                    User.Identity?.Name);
+
+                TempData["Success"] = "Usuario registrado correctamente.";
+                return RedirectToAction(nameof(Index));
             }
-            return View(usuario);
-        }
-
-
-        // EDIT (Editar e Inhabilitar Usuario)
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null) return NotFound();
-
-            return View(usuario);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Usuario usuario)
-        {
-            if (id != usuario.IdUsuario) return NotFound();
-
-            if (ModelState.IsValid)
+            catch (Exception ex)
             {
-                try
-                {
-                    // Para evitar que la fecha de registro original se pierda al editar,
-                    // la buscamos en la base de datos para mantenerla intacta.
-                    var usuarioOriginal = await _context.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.IdUsuario == id);
-                    if (usuarioOriginal != null)
-                    {
-                        usuario.FechaRegistro = usuarioOriginal.FechaRegistro;
-                    }
-
-                    _context.Update(usuario);
-                    await _context.SaveChangesAsync();
-                    TempData["Success"] = "Usuario actualizado correctamente.";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Error al actualizar: " + ex.Message);
-                }
+                ModelState.AddModelError(string.Empty, "Error al guardar: " + ex.Message);
             }
-            return View(usuario);
         }
+
+        return View(usuario);
+    }
+
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id is null)
+        {
+            return NotFound();
+        }
+
+        Usuario? usuario = await _context.Usuarios.FindAsync(id);
+        if (usuario is null)
+        {
+            return NotFound();
+        }
+
+        usuario.ClaveAcceso = string.Empty;
+        return View(usuario);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Usuario usuario)
+    {
+        if (id != usuario.IdUsuario)
+        {
+            return NotFound();
+        }
+
+        ModelState.Remove(nameof(Usuario.ClaveAcceso));
+
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                Usuario? usuarioOriginal = await _context.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.IdUsuario == id);
+                if (usuarioOriginal is null)
+                {
+                    return NotFound();
+                }
+
+                bool existeCorreo = await _context.Usuarios.AnyAsync(u =>
+                    u.CorreoElectronico == usuario.CorreoElectronico &&
+                    u.IdUsuario != usuario.IdUsuario);
+
+                if (existeCorreo)
+                {
+                    ModelState.AddModelError("CorreoElectronico", "Este correo ya esta registrado en el sistema.");
+                    return View(usuario);
+                }
+
+                usuario.FechaRegistro = usuarioOriginal.FechaRegistro;
+                usuario.ClaveAcceso = string.IsNullOrWhiteSpace(usuario.ClaveAcceso)
+                    ? usuarioOriginal.ClaveAcceso
+                    : _passwordService.HashPassword(usuario, usuario.ClaveAcceso);
+
+                _context.Update(usuario);
+                await _context.SaveChangesAsync();
+                await _auditTrailService.RecordAsync(
+                    "UsuarioActualizado",
+                    $"Se actualizo el usuario {usuario.CorreoElectronico}. Estado activo: {usuario.EstadoActivo}.",
+                    User.Identity?.Name);
+
+                TempData["Success"] = "Usuario actualizado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error al actualizar: " + ex.Message);
+            }
+        }
+
+        return View(usuario);
     }
 }

@@ -1,43 +1,55 @@
-using SIGEDAA.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies; // Agregamos esta librería
+using SIGEDAA.Data;
+using SIGEDAA.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddSingleton<IAuditTrailService, AuditTrailService>();
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_DataProtectionKeys")))
+    .SetApplicationName("SIGEDAA");
 
-// ---> CONFIGURACION DEL SERVICIO DE AUTENTICACIÓN
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Auth/Login"; // Ruta a la que te mandará al intentar entrar sin permiso
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo que dura la sesión activa
-        options.AccessDeniedPath = "/Auth/Login";
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
     });
-
 
 var app = builder.Build();
 app.UseSession();
-// Configure the HTTP request pipeline.
+try
+{
+    await DemoDataSeeder.SeedAsync(app.Services);
+}
+catch (Exception ex)
+{
+    app.Logger.LogWarning(ex, "No fue posible ejecutar el seeding inicial.");
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// ACTIVACION EL MIDDLEWARE DE AUTENTICACIÓN <---
-app.UseAuthentication(); // IMPORTANTE: Debe ir estrictamente ANTES de UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -5,11 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using SIGEDAA.Data;
 using SIGEDAA.Models;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SIGEDAA.Controllers
 {
-    [Authorize] // <-- Protege todo el controlador Atletas
+    [Authorize(Roles = "Administrador,Presidente,Juez")]
     public class AtletasController : Controller
     {
         private readonly AppDbContext _context;
@@ -38,6 +39,7 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Atletas/Create
+        [Authorize(Roles = "Administrador,Presidente")]
         public IActionResult Create()
         {
             // Enviamos la lista de Asociaciones para el primer filtro
@@ -50,6 +52,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Atletas/Create
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Atleta atleta)
@@ -70,6 +73,7 @@ namespace SIGEDAA.Controllers
         }
 
         // ESTE ES EL NUEVO MÉTODO PARA EL FILTRO (Ponlo al final del controlador, antes de la última llave)
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpGet]
         public async Task<JsonResult> ObtenerClubesPorAsociacion(int idAsociacion)
         {
@@ -85,6 +89,7 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Atletas/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -97,6 +102,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Atletas/Edit/5
+        [Authorize(Roles = "Administrador,Presidente")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Atleta atleta)
@@ -127,6 +133,7 @@ namespace SIGEDAA.Controllers
         }
 
         // GET: /Atletas/Delete/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -138,6 +145,7 @@ namespace SIGEDAA.Controllers
         }
 
         // POST: /Atletas/Delete
+        [Authorize(Roles = "Administrador")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -152,6 +160,7 @@ namespace SIGEDAA.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int id)
@@ -164,6 +173,40 @@ namespace SIGEDAA.Controllers
                 TempData["Success"] = atleta.EstadoActivo ? "Atleta habilitado." : "Atleta inhabilitado.";
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<FileResult> ExportarCsv()
+        {
+            Atleta[] atletas = await _context.Atletas
+                .OrderBy(a => a.Apellidos)
+                .ThenBy(a => a.Nombres)
+                .ToArrayAsync();
+
+            var csv = new StringBuilder();
+            csv.AppendLine("Id,Nombres,Apellidos,FechaNacimiento,Genero,EstaturaCm,PesoKg,TipoSangre,Estado");
+
+            foreach (Atleta atleta in atletas)
+            {
+                csv.AppendLine(string.Join(",",
+                    atleta.IdAtleta,
+                    EscaparCsv(atleta.Nombres),
+                    EscaparCsv(atleta.Apellidos),
+                    atleta.FechaNacimiento.ToString("yyyy-MM-dd"),
+                    EscaparCsv(atleta.Genero),
+                    atleta.EstaturaCm,
+                    atleta.PesoKg,
+                    EscaparCsv(atleta.TipoSangre),
+                    atleta.EstadoActivo ? "Activo" : "Inactivo"));
+            }
+
+            return File(Encoding.UTF8.GetBytes(csv.ToString()), "text/csv", $"atletas-{DateTime.Now:yyyyMMdd}.csv");
+        }
+
+        private static string EscaparCsv(string? valor)
+        {
+            string limpio = valor ?? string.Empty;
+            return $"\"{limpio.Replace("\"", "\"\"")}\"";
         }
     }
 }

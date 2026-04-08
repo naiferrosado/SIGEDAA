@@ -10,22 +10,17 @@
     <div class="card-body">
 
         <div class="alert alert-info">
-            <h5 class="alert-heading"><i class="fas fa-trophy"></i> @competencia.NombreEvento</h5>
+            <h5 class="alert-heading"><i class="fas fa-trophy"></i> @(competencia?.NombreEvento ?? "Competencia")</h5>
             <hr>
             <p class="mb-0">
-                <strong>Sede:</strong> @competencia.Sede |
-                <strong>Nivel:</strong> @competencia.Nivel |
-                <strong>Fecha:</strong> @competencia.FechaInicio.ToString("dd/MM/yyyy")
+                <strong>Sede:</strong> @(competencia?.Sede ?? "Sin sede") |
+                <strong>Nivel:</strong> @(competencia?.Nivel ?? "Sin nivel") |
+                <strong>Fecha:</strong> @(competencia?.FechaInicio.ToString("dd/MM/yyyy") ?? "Sin fecha")
             </p>
         </div>
 
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">@TempData["Error"]</div>
-        }
-
         <form asp-action="InscribirClub" method="post">
-            <input type="hidden" name="IdCompetencia" value="@competencia.IdCompetencia" />
+            <input type="hidden" name="IdCompetencia" value="@competencia?.IdCompetencia" />
 
             <div class="row">
                 <div class="col-md-6 mb-4">

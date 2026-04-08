@@ -2,12 +2,25 @@
 
 @{
     ViewData["Title"] = "Detalle Atleta";
+    var puedeGestionarAtletas = User.IsInRole("Administrador") || User.IsInRole("Presidente");
 }
 
-<h2>Detalle Atleta</h2>
+<div class="page-header">
+    <div>
+        <h1>Perfil del atleta</h1>
+        <p>Consulta los datos fisicos y administrativos del atleta seleccionado.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        @if (puedeGestionarAtletas)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.IdAtleta" class="btn btn-warning">Editar</a>
+        }
+    </div>
+</div>
 
 <div class="card p-3">
-    <dl class="row">
+    <dl class="row description-list mb-0">
         <dt class="col-sm-3">Id</dt>
         <dd class="col-sm-9">@Model.IdAtleta</dd>
         <dt class="col-sm-3">Nombres</dt>
@@ -27,7 +40,4 @@
         <dt class="col-sm-3">Id Club</dt>
         <dd class="col-sm-9">@Model.IdClub</dd>
     </dl>
-
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
-    <a asp-action="Edit" asp-route-id="@Model.IdAtleta" class="btn btn-warning">Editar</a>
 </div>

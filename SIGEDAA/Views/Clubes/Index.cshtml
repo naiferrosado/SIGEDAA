@@ -2,33 +2,26 @@
 
 @{
     ViewData["Title"] = "Clubes";
+    var puedeGestionarClubes = User.IsInRole("Administrador") || User.IsInRole("Presidente");
+    var esAdministrador = User.IsInRole("Administrador");
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>Clubes Deportivos</h2>
+<div class="page-header">
     <div>
-        <a class="btn btn-primary" asp-action="Create">Nuevo Club</a>
+        <h1>Clubes deportivos</h1>
+        <p>Gestiona los clubes afiliados, su estado institucional y la relacion con atletas y asociaciones.</p>
+    </div>
+    <div class="page-actions">
+        @if (puedeGestionarClubes)
+        {
+            <a class="btn btn-primary" asp-action="Create">Nuevo Club</a>
+        }
+        <a class="btn btn-secondary" asp-action="ExportarCsv">Exportar CSV</a>
         <a class="btn btn-secondary" asp-controller="Dashboard" asp-action="Index">Volver al Dashboard</a>
     </div>
 </div>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 
 <div class="card p-3 shadow-sm">
     <table id="tablaClubes" class="table table-striped table-bordered" style="width:100%">
@@ -70,18 +63,24 @@
                     </td>
                     <td>
                         <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.IdClub">Ver Detalles</a>
-                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdClub">Editar</a>
-                        <form asp-action="CambiarEstado" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@item.IdClub" />
-                            @if (item.EstadoActivo)
-                            {
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar este club?');">Inhabilitar</button>
-                            }
-                            else
-                            {
-                                <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar este club?');">Habilitar</button>
-                            }
-                        </form>
+                        @if (puedeGestionarClubes)
+                        {
+                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IdClub">Editar</a>
+                        }
+                        @if (esAdministrador)
+                        {
+                            <form asp-action="CambiarEstado" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@item.IdClub" />
+                                @if (item.EstadoActivo)
+                                {
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Inhabilitar este club?');">Inhabilitar</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('¿Habilitar este club?');">Habilitar</button>
+                                }
+                            </form>
+                        }
                     </td>
                 </tr>
             }

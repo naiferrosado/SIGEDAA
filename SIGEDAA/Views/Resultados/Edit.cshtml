@@ -4,6 +4,16 @@
     ViewData["Title"] = "Editar Resultado";
 }
 
+<div class="page-header">
+    <div>
+        <h1>Corregir resultado</h1>
+        <p>Actualiza la marca registrada y deja que el sistema recalcule automaticamente las posiciones.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+
 <div class="card shadow-sm mx-auto" style="max-width: 800px;">
     <div class="card-header bg-warning text-dark">
         <h4 class="mb-0 fw-bold"><i class="fas fa-edit"></i> Corregir Marca Obtenida</h4>
@@ -50,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-2 mt-2">
+            <div class="page-actions justify-content-end mt-2">
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
                 <button type="submit" class="btn btn-warning fw-bold px-4"><i class="fas fa-save"></i> Guardar Cambios</button>
             </div>

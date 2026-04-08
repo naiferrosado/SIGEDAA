@@ -4,12 +4,17 @@
     ViewData["Title"] = "Detalles del Club";
     // Recuperamos la lista de atletas que mandamos desde el controlador
     var atletas = ViewBag.Atletas as List<SIGEDAA.Models.Atleta>;
+    var puedeGestionarClubes = User.IsInRole("Administrador") || User.IsInRole("Presidente");
+    var puedeGestionarAtletas = User.IsInRole("Administrador") || User.IsInRole("Presidente");
 }
 
 <div class="d-flex justify-content-between mb-3">
     <h2>Detalles del Club: <span class="text-primary">@Model.NombreClub</span></h2>
     <div>
-        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdClub">Editar Club</a>
+        @if (puedeGestionarClubes)
+        {
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdClub">Editar Club</a>
+        }
         <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
     </div>
 </div>
@@ -51,7 +56,10 @@
 <div class="card shadow-sm">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0"><i class="fas fa-running"></i> Atletas Registrados (@(atletas?.Count ?? 0))</h5>
-        <a asp-controller="Atletas" asp-action="Create" class="btn btn-sm btn-light text-primary fw-bold">Agregar Nuevo Atleta</a>
+        @if (puedeGestionarAtletas)
+        {
+            <a asp-controller="Atletas" asp-action="Create" class="btn btn-sm btn-light text-primary fw-bold">Agregar Nuevo Atleta</a>
+        }
     </div>
     <div class="card-body">
         @if (atletas == null || !atletas.Any())

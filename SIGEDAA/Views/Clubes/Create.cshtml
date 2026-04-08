@@ -4,6 +4,16 @@
     ViewData["Title"] = "Registrar Club";
 }
 
+<div class="page-header">
+    <div>
+        <h1>Registrar club</h1>
+        <p>Crea el expediente del club, su asociacion provincial y el entrenador principal responsable.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+
 <div class="card shadow-sm mx-auto" style="max-width: 800px;">
     <div class="card-header bg-success text-white">
         <h4 class="mb-0">Registrar Nuevo Club</h4>
@@ -47,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="page-actions mt-4">
                 <button type="submit" class="btn btn-success">Guardar Club</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>

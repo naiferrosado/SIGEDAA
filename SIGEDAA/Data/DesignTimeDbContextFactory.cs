@@ -10,10 +10,9 @@ namespace SIGEDAA.Data
     {
         public AppDbContext CreateDbContext(string[] args)
         {
-            // Busca appsettings.json en el árbol de directorios comenzando desde AppContext.BaseDirectory
             var baseDir = AppContext.BaseDirectory;
             var dir = new DirectoryInfo(baseDir);
-            FileInfo settingsFile = null;
+            FileInfo? settingsFile = null;
 
             while (dir != null)
             {
@@ -28,11 +27,11 @@ namespace SIGEDAA.Data
 
             if (settingsFile == null)
             {
-                throw new FileNotFoundException("No se encontró 'appsettings.json' en los directorios padre. Asegúrate de que exista en la raíz del proyecto.", baseDir);
+                throw new FileNotFoundException("No se encontro 'appsettings.json' en los directorios padre. Asegurate de que exista en la raiz del proyecto.", baseDir);
             }
 
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(settingsFile.DirectoryName)
+                .SetBasePath(settingsFile.DirectoryName!)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddEnvironmentVariables()
                 .Build();
@@ -41,7 +40,7 @@ namespace SIGEDAA.Data
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new InvalidOperationException("No se encontró la cadena de conexión 'DefaultConnection' en appsettings.json.");
+                throw new InvalidOperationException("No se encontro la cadena de conexion 'DefaultConnection' en appsettings.json.");
             }
 
             optionsBuilder.UseSqlServer(connectionString);

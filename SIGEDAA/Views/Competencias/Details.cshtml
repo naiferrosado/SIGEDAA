@@ -4,9 +4,12 @@
     ViewData["Title"] = "Detalles del Torneo";
 }
 
-<div class="d-flex justify-content-between mb-3">
-    <h2>Detalles del Torneo: <span class="text-primary">@Model.NombreEvento</span></h2>
+<div class="page-header">
     <div>
+        <h1>Detalle del torneo</h1>
+        <p>Consulta el estado actual del evento, sus observaciones y los clubes inscritos.</p>
+    </div>
+    <div class="page-actions">
         <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdCompetencia">Editar Torneo</a>
         <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
     </div>
@@ -87,7 +90,7 @@
                         @foreach (var inscripcion in Model.ClubesInscritos)
                         {
                             <tr>
-                                <td class="fw-bold">@inscripcion.Club.NombreClub</td>
+                                <td class="fw-bold">@(inscripcion.Club?.NombreClub ?? "Sin club")</td>
                                 <td>@inscripcion.FechaInscripcion.ToString("dd/MM/yyyy")</td>
                                 <td><span class="badge bg-success">@inscripcion.EstadoInscripcion</span></td>
                                 <td>

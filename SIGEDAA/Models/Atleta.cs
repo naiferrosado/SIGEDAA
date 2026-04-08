@@ -11,20 +11,20 @@ namespace SIGEDAA.Models
         
 
         [Required]
-        public string Nombres { get; set; }
+        public string Nombres { get; set; } = string.Empty;
 
         [Required]
-        public string Apellidos { get; set; }
+        public string Apellidos { get; set; } = string.Empty;
 
         public DateTime FechaNacimiento { get; set; }
 
-        public string Genero { get; set; }
+        public string Genero { get; set; } = string.Empty;
 
         public decimal EstaturaCm { get; set; }
 
         public decimal PesoKg { get; set; }
 
-        public string TipoSangre { get; set; }
+        public string TipoSangre { get; set; } = string.Empty;
         public bool EstadoActivo { get; set; } = true;
         public int IdClub { get; set; }
 

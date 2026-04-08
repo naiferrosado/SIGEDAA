@@ -17,13 +17,13 @@ namespace SIGEDAA.Models
 
         public DateTime FechaInscripcion { get; set; } = DateTime.Now;
 
-        public string EstadoInscripcion { get; set; } // Ej. "Confirmado", "Pendiente"
+        public string EstadoInscripcion { get; set; } = string.Empty; // Ej. "Confirmado", "Pendiente"
 
         // Propiedades de navegación
         [ForeignKey("IdCompetencia")]
-        public virtual Competencia Competencia { get; set; }
+        public virtual Competencia? Competencia { get; set; }
 
         [ForeignKey("IdClub")]
-        public virtual Club Club { get; set; }
+        public virtual Club? Club { get; set; }
     }
 }

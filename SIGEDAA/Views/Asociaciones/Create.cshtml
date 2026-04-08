@@ -4,6 +4,16 @@
     ViewData["Title"] = "Registrar Asociación";
 }
 
+<div class="page-header">
+    <div>
+        <h1>Registrar asociacion</h1>
+        <p>Agrega una nueva asociacion provincial y registra sus datos institucionales y de contacto.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+
 <div class="card shadow-sm mx-auto" style="max-width: 800px;">
     <div class="card-header bg-primary text-white">
         <h4 class="mb-0">Registrar Nueva Asociación</h4>
@@ -41,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="page-actions mt-4">
                 <button type="submit" class="btn btn-primary">Guardar Registro</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>

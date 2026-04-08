@@ -4,6 +4,16 @@
     ViewData["Title"] = "Registrar Torneo";
 }
 
+<div class="page-header">
+    <div>
+        <h1>Registrar torneo</h1>
+        <p>Configura el evento competitivo, sus fechas, sede y condiciones generales antes de iniciar inscripciones.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+
 <div class="card shadow-sm mx-auto" style="max-width: 800px;">
     <div class="card-header bg-primary text-white">
         <h4 class="mb-0">Registrar Nuevo Torneo (Competencia)</h4>
@@ -59,7 +69,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="page-actions mt-4">
                 <button type="submit" class="btn btn-primary">Guardar Torneo</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>

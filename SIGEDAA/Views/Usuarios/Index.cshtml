@@ -9,12 +9,12 @@
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="page-header">
         <div>
-            <h2 class="fw-bold">Gestión de Usuarios</h2>
-            <p class="text-muted mb-0">Administración de accesos y roles del sistema.</p>
+            <h1>Usuarios del sistema</h1>
+            <p>Administra accesos, roles y estado de las cuentas que operan dentro de SIGEDAA.</p>
         </div>
-        <div class="d-flex gap-2">
+        <div class="page-actions">
             <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary shadow-sm">
                 Dashboard
             </a>
@@ -23,14 +23,6 @@
             </a>
         </div>
     </div>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
 
     <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body">

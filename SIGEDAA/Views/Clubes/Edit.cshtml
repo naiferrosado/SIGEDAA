@@ -4,6 +4,16 @@
     ViewData["Title"] = "Editar Club";
 }
 
+<div class="page-header">
+    <div>
+        <h1>Editar club</h1>
+        <p>Actualiza la informacion institucional del club y su estructura principal de contacto.</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+    </div>
+</div>
+
 <div class="card shadow-sm mx-auto" style="max-width: 800px;">
     <div class="card-header bg-warning text-dark">
         <h4 class="mb-0">Editar Club Deportivo</h4>
@@ -31,7 +41,7 @@
                     <select asp-for="IdEntrenadorPrincipal" class="form-select" asp-items="ViewBag.Entrenadores">
                         <option value="">-- Seleccione un Entrenador --</option>
                     </select>
-                </div>>
+                </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="Telefono" class="form-label">Teléfono de Contacto</label>
                     <input asp-for="Telefono" class="form-control" />
@@ -50,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="page-actions mt-4">
                 <button type="submit" class="btn btn-warning">Actualizar Club</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
             </div>

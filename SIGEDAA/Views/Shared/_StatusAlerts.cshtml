@@ -1,0 +1,43 @@
+@{
+    var success = TempData["Success"]?.ToString();
+    var error = TempData["Error"]?.ToString();
+    var warning = TempData["Warning"]?.ToString();
+    var info = TempData["Info"]?.ToString();
+}
+
+@if (!string.IsNullOrWhiteSpace(success) || !string.IsNullOrWhiteSpace(error) || !string.IsNullOrWhiteSpace(warning) || !string.IsNullOrWhiteSpace(info))
+{
+    <div class="status-alert-stack mb-4">
+        @if (!string.IsNullOrWhiteSpace(success))
+        {
+            <div class="alert alert-success alert-dismissible fade show app-toast-alert" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>@success
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <div class="alert alert-danger alert-dismissible fade show app-toast-alert" role="alert">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>@error
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(warning))
+        {
+            <div class="alert alert-warning alert-dismissible fade show app-toast-alert" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>@warning
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(info))
+        {
+            <div class="alert alert-info alert-dismissible fade show app-toast-alert" role="alert">
+                <i class="fa-solid fa-circle-info me-2"></i>@info
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        }
+    </div>
+}

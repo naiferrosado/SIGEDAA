@@ -1,69 +1,84 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@using Microsoft.AspNetCore.Http
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    var esPantallaPrincipal = string.Equals(controller, "Home", System.StringComparison.OrdinalIgnoreCase)
+        && string.Equals(action, "Index", System.StringComparison.OrdinalIgnoreCase);
+
+    var usuario = Context.Session.GetString("usuario");
+    var rol = Context.Session.GetString("rol");
+    var autenticado = !string.IsNullOrWhiteSpace(usuario);
+}
+
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SIGEDAA</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SIGEDAA.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SIGEDAA</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+<body class="@(esPantallaPrincipal ? "landing-page" : "app-shell")">
+    @if (esPantallaPrincipal)
+    {
+        @RenderBody()
+    }
+    else
+    {
+        <header class="app-navbar">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid px-4 px-lg-5 py-3">
+                    <a class="navbar-brand d-flex align-items-center" asp-controller="@(autenticado ? "Dashboard" : "Home")" asp-action="Index">
+                        <span class="app-brand-mark"><i class="fas fa-trophy"></i></span>
+                        SIGEDAA
+                    </a>
 
-                            <ul class="navbar-nav flex-grow-1"></ul>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar" aria-controls="appNavbar"
+                            aria-expanded="false" aria-label="Mostrar navegacion">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                            <div style="color:black; font-weight:bold;">
-
-                                @{
-                                    var usuario = Context.Session.GetString("usuario");
-                                    var rol = Context.Session.GetString("rol");
-                                }
-
-                                @if (usuario != null)
-                                {
-                                    <span>
-                                        Usuario: <b>@usuario</b> | Rol: <b>@rol</b>
-                                    </span>
-
-                                    <a href="/Auth/Logout" style="margin-left:15px;">Cerrar sesión</a>
-                                }
-
+                    <div class="collapse navbar-collapse justify-content-end" id="appNavbar">
+                        @if (autenticado)
+                        {
+                            <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
+                                <div class="app-user-summary">
+                                    <span><i class="fas fa-user-circle me-2"></i>Usuario: <strong>@usuario</strong></span>
+                                    <span class="app-role-pill">@rol</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">
+                                        <i class="fas fa-table-columns me-1"></i> Dashboard
+                                    </a>
+                                    <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger">
+                                        <i class="fas fa-right-from-bracket me-1"></i> Cerrar sesion
+                                    </a>
+                                </div>
                             </div>
-
-                        </div>
-                        <li class="nav-item">
-
-                        </li>
-                        <li class="nav-item">
-
-                        </li>
-                    </ul>
+                        }
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            </nav>
+        </header>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - SIGEDAA - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="app-main">
+            <main class="app-content container-fluid px-4 px-lg-5 py-4">
+                <partial name="_StatusAlerts" />
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+
+        <footer class="app-footer py-3">
+            <div class="container-fluid px-4 px-lg-5 d-flex flex-column flex-lg-row justify-content-between gap-2">
+                <span>&copy; @DateTime.Now.Year SIGEDAA</span>
+                <a asp-controller="Home" asp-action="Privacy">Privacidad</a>
+            </div>
+        </footer>
+    }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
