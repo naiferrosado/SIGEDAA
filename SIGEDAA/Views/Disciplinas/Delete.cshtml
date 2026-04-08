@@ -1,0 +1,49 @@
+﻿@model SIGEDAA.Models.Disciplina
+
+@{
+    ViewData["Title"] = "Eliminar Disciplina";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-danger rounded-4 mx-auto" style="max-width: 600px;">
+
+        <div class="card-header bg-danger text-white rounded-top-4 p-3 d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle fs-3 me-3"></i>
+            <div>
+                <h4 class="mb-0 fw-bold">Eliminar Disciplina</h4>
+                <small>Esta acción no se puede deshacer</small>
+            </div>
+        </div>
+
+        <div class="card-body p-4 text-center">
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-warning fw-bold shadow-sm" role="alert">
+                    <i class="fas fa-lock me-2"></i> @TempData["Error"]
+                </div>
+            }
+
+            <h5 class="text-muted mb-3">¿Estás completamente seguro de eliminar esta prueba?</h5>
+
+            <div class="p-3 bg-light border border-danger border-opacity-25 rounded-3 mb-4">
+                <h3 class="fw-bold text-dark text-uppercase">@Model.NombreDisciplina</h3>
+                <span class="badge bg-secondary fs-6">@Model.Tipo</span>
+                <span class="badge bg-secondary fs-6">@Model.CategoriaRecomendada</span>
+            </div>
+
+            <form asp-action="Delete" method="post" class="d-flex justify-content-center gap-3">
+                <input type="hidden" asp-for="IdDisciplina" />
+
+                <a asp-action="Index" class="btn btn-secondary shadow-sm px-4">
+                    <i class="fas fa-times me-1"></i> Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-danger shadow-sm px-4 fw-bold">
+                    <i class="fas fa-trash-alt me-1"></i> Sí, Eliminar Definitivamente
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
